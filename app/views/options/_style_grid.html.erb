@@ -1,0 +1,42 @@
+<%= form_for :votes, url: {controller: :votes, action: :create, parents: @parents}, method: :post do |f| %>
+	<div class="gallery">
+	<h2 class="push-up-10"><%= @question.title %></h2>
+		<% @answers.each do |a| %>
+		<div class="gallery-item">
+			<div class="panel panel-default tr-clickable <%= @question.multiple ? 'multiple_answers' : 'single_answer' %> <%= 'selected' if session[:id] && @voted_a_ids.include?(a.id) %>" data-answer_id="<%= a.id %>">
+				<div class="panel-body">
+					<%= image_tag a.picture.url, class: "img-thumbnail-150"%><br>
+					<p class="img-title"><%= a.title %></p>
+					<%= f.check_box a.id, value: nil, class: 'hidden'  %>
+				</div>
+			</div>
+		</div>
+		<% end %>
+	</div>
+
+	<% if session[:id] && !@voted_a_ids.empty? %>
+		<div class="centered">
+			<div class="btn btn-warning push-left-8">You have already voted: <b class="push-right-8"><%= @voted_a_titles*', ' %></b>
+			</div>
+			<% if @next_question.nil? %>
+				<%= form_for :votes, url: {controller: :votes, action: :update}, method: :patch do |f| %>
+       		<%= link_to 'Finish', {controller: :votes, action: :confirm, question_id: @first_question.id }, class: 'btn btn-primary pull-right'  %>
+      	<% end %>
+     	<% else %>
+     		<%= form_for :votes, url: {controller: :votes, action: :update}, method: :patch do |f| %>
+       		<%= f.submit 'Change', class: 'btn btn-primary' if @question.revote %>
+      	<% end %>
+     		<%= link_to 'Skip', {controller: :questions, action: :show, id: @next_question.id}, class: 'btn btn-primary pull-left' if !@next_question.nil? && !@question.revote %>
+     	<% end %>
+		</div>
+	<% else %>
+		<div class="centered">
+			<% if @next_question.nil? %>
+     		<%= f.submit 'Finish', class: 'btn btn-primary btn-lg' %>
+     	<% else %>
+     		<%= link_to 'Skip', {controller: :questions, action: :show, id: @next_question.id}, class: 'btn btn-primary push-left-8 btn-lg' if !@next_question.nil? && !@question.revote %>
+     		<%= f.submit 'Vote', class: 'btn btn-primary btn-lg' %>
+     	<% end %>
+		</div>
+	<% end %>
+<% end %>

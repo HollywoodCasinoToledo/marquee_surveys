@@ -1,14 +1,35 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <title>MarqueeSurveys</title>
-  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
-  <%= csrf_meta_tags %>
-</head>
-<body>
+<html lang="en">
+  <head>        
+      <!-- META SECTION -->
+      <title><%= (yield(:title) + " | " unless yield(:title).blank?).to_s + "Survey" %></title>             
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      
+      <!-- <link rel="icon" href="favicon.ico" type="image/x-icon" /> -->
+      <!-- END META SECTION -->
+      
+      <!-- LESSCSS INCLUDE -->   
+      <%= stylesheet_link_tag "theme-default", id: "theme", media: "all" %>  
+      <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Andada" />
+      <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Damion" />
+      <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Caveat" >
+      <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Boogaloo" >
+      <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Questrial" >
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Baloo+Da" >   
+            
+      <!-- EOF LESSCSS INCLUDE -->                                       
+  </head>
+  <body class="background-colorful">
+    <noscript><div class="alert alert-danger">You do not have Javascript enabled. Many features of this site require Javascript. Please visit http://enable-javascript.com/ to learn how to enabled it.</div></noscript>
+    
 
-<%= yield %>
+	      <%= render 'layouts/flashes' %>
+        <%= yield %>
 
-</body>
+
+    <%=javascript_include_tag "application", "data-turbolinks-track" => true %>
+
+  </body>
 </html>

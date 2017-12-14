@@ -1,0 +1,32 @@
+
+<div class="row">
+	<div class="col-md-12 col-sm-12 col-xs-12 col-lg-8">
+		<div class="panel panel-default push-up-20">
+			<div class="panel-heading">
+        <h3 class="panel-title"><%= @question.title %> (You can select multiple answers!)</h3>
+      </div>
+			<div class="panel-body list-group list-group-contacts"> 
+				<%= form_for :vote, url: {controller: :votes, action: :create}, method: :post do |f| %>  
+				<% @answers.each do |a| %>                             
+          <div class="list-group-item multiple_answers clickable" data-answer_id="<%= a.id %>">
+          	<span class="contacts-title"><%= a.title %></span>
+          	<%= f.check_box a.id, {class: 'hidden'}  %>                       
+          </div> 
+        <% end %>                               
+      </div>
+			<% if @vote %>
+				<div class="panel-footer">
+					<%= form_for :vote, url: {controller: :votes, action: :update}, method: :patch do |f| %>
+	       		<%= f.hidden_field :answer_id, id: 'answer_id' %>
+	       		<%= f.submit 'Change', class: 'btn btn-primary pull-right' %>
+	      	<% end %>
+	      	<div class="btn btn-warning pull-right push-left-8">You have already voted: <b class="push-right-8"><%= Answer.find(@vote.answer_id).title %></b></div>
+				</div>
+			<% else %>
+				<div class="panel-footer">
+       		<%= f.submit 'Vote', class: 'btn btn-primary pull-right' %>
+				</div>
+			<% end end %>
+		</div>
+	</div>
+</div>
