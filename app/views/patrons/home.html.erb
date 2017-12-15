@@ -1,42 +1,40 @@
 <% content_for :title, "Control Panel" %>
 
-	<!-- START TITLE -->
-	<div class="page-title">                    
-	  <%= image_tag "Marquee-Logo.png" %>
-	</div>
-	<!-- END TITLE -->
+<!-- START TITLE -->
+<div class="page-title">                    
+  <%= image_tag "Marquee-Logo.png" %>
+</div>
+<!-- END TITLE -->
 
 <div class="page-container">
 
-	<h1>Are you a Marquee Rewards member?</h1>
-
-	<div class="row">
-	  <div class="col-md-6">
-	  	<div class="options-boolean">
-	    		Yes
-			</div>
-	  </div>
-
-	  <div class="col-md-6">
-	  	<div class="options-boolean">
-	  	  	No
-			</div>
-	  </div>
+	<div class="survey-group-name">
+		Restaurants
 	</div>
+
+	<h1 id="question">Are you a Marquee Rewards member?</h1>
+
+	<% case 2 %>
+		<% when Question::STYLE_BOOL %>
+		<%= render 'options/style_bool' %>
+		<% when Question::STYLE_RATE_3 %>
+		<%= render 'options/style_rate_3' %>
+		<% when Question::STYLE_RATE_5 %>
+		<%= render 'options/style_rate_5' %>
+		<% when Question::STYLE_LIST %>
+		<%= render 'options/style_list' %>
+		<% when Question::STYLE_GRID %>
+		<%= render 'options/style_grid' %>
+		<% when Question::STYLE_CMNT %>
+		<%= render 'options/style_comment' %>
+		<% else %>
+		<%= render 'options/style_list' %>
+	<% end %>
 
 </div>
 
 <div class="page-controls">
 
-	<div class="row">
-	  <div class="page-control-btn control-btn-left">
-	  <span class="fa fa-arrow-left"></span> 
-	   Back
-	  </div>
-	  <div class="page-control-btn control-btn-right">
-	  	Next
-	  	<span class="fa fa-arrow-right"></span> 
-	  </div>
-	</div>
+	<%= render 'surveys/layout_survey_controls' %>
 
 </div>

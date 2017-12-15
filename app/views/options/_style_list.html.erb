@@ -1,42 +1,8 @@
-<div class="row">
-	<div class="col-md-12 col-sm-12 col-xs-12 col-lg-8">
-		<div class="panel panel-default push-up-20">
-		<%= form_for :votes, url: {controller: :votes, action: :create, parents: @parents }, method: :post do |f| %>
-			<div class="panel-heading">
-        <h3 class="panel-title"><%= @question.title %> <%= '(You can select multiple answers!)' if @question.multiple %></h3>
-      </div>
-
-			<div class="panel-body list-group list-group-contacts"> 
-				<% @answers.each do |a| %>
-          <div class="list-group-item <%= @question.multiple ? 'multiple_answers' : 'single_answer' %> tr-clickable <%= 'selected' if session[:id] && @voted_a_ids.include?(a.id) %>" data-answer_id="<%= a.id %>">
-          	<span class="contacts-title"><%= a.title %></span>
-          	<%= f.check_box a.id, value: nil, class: 'hidden'  %>
-          </div> 
-        <% end %>
-      </div>
-
-			<div class="panel-footer">
-				<% if session[:id] && !@voted_a_ids.empty? %>
-					<% if @next_question.nil? %>
-						<%= form_for :votes, url: {controller: :votes, action: :update}, method: :patch do |f| %>
-		       		<%= link_to 'Finish', {controller: :votes, action: :confirm, question_id: @first_question.id }, class: 'btn btn-primary pull-right'  %>
-		      	<% end %>
-	       	<% else %>
-	       		<%= form_for :votes, url: {controller: :votes, action: :update}, method: :patch do |f| %>
-		       		<%= f.submit 'Change', class: 'btn btn-primary pull-right' if @question.revote %>
-		      	<% end %>
-	       	<% end %>
-						<div class="btn btn-warning pull-right push-left-8">You have already voted: <b class="push-right-8"><%= @voted_a_titles*', ' %> </b></div>
-				<% else %>
-					<% if @next_question.nil? %>
-	       		<%= f.submit 'Finish', class: 'btn btn-primary pull-right' %>
-	       	<% else %>
-	       		<%= f.submit 'Vote', class: 'btn btn-primary pull-right' %>
-	       	<% end %>
-				<% end %>
-				<%= link_to 'Skip', {controller: :questions, action: :show, id: @next_question.id, parents: @parents}, class: 'btn btn-primary' if !@next_question.nil? && !@question.revote %>
-			</div>
-		<% end %>
-		</div>
-	</div>
+<div class="list-group list-group-contacts"> 
+	<% 4.times do %>
+    <div class="list-group-item <%#= @question.multiple ? 'multiple_options' : 'single_option' %>" data-option_id="<%# o.id %>">
+    	<span class="contacts-title">Option</span>
+    	<%#= f.check_box ao.id, value: nil, class: 'hidden'  %>
+    </div> 
+  <% end %>
 </div>
