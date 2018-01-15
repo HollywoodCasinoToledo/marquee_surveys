@@ -1,0 +1,53 @@
+<% content_for :title, "Control Panel" %>
+
+<!-- START BREADCRUMB -->
+<ul class="breadcrumb">
+	<li><a href="/">Home</a></li>  
+	<li>Control Panel</li>             
+</ul>
+<!-- END BREADCRUMB --> 
+
+<div class="content-frame">
+    <div class="content-frame-top">                        
+        <div class="page-title">                    
+            <h2><span class="fa fa-cog"></span> Control Panel</h2>
+        </div>                                      
+        <div class="pull-right">
+            <button class="btn btn-default content-frame-left-toggle"><span class="fa fa-bars"></span></button>
+        </div>                        
+    </div>
+    <!-- END CONTENT FRAME TOP -->
+    
+    <!-- START CONTENT FRAME LEFT -->
+    <div class="content-frame-left">
+			<%= render 'layouts/left_survey_contents' %>
+    </div>
+    <!-- END CONTENT FRAME LEFT -->
+    
+    <!-- START CONTENT FRAME BODY -->
+    <div class="content-frame-body">
+                
+  		<h2><span class="fa fa-plus"></span> New Category</h2>
+      <div class="panel panel-default panel-body max-x-1000">
+  	  	<%= form_for :category, {controller: :category, action: :create} do |f| %>
+      		<%= f.hidden_field :survey_id %>
+      
+	        <div class="form-group">
+	          <p><label for = "question_name">Category Name</label>:
+	          <%= f.text_field :name, id: 'category_name', class: 'form-control' %></p>
+	        </div>
+
+		      <div class="panel panel-gray panel-body">
+		        <div class="form-group">
+		          <p><label for="poll">Parent Answer: (must select answer to access this question)</label><br></p>
+		          <b><p id="required_question"></p></b>
+		          <p><%= f.select :parent, grouped_options_for_select(@selection_hash.to_a), {include_blank: 'Any'},{class: 'form-control y-500'} %></p>
+		        </div>
+		      </div>
+
+	        <%= f.submit 'Create', class: 'btn btn-primary' %>
+					<%= link_to 'Cancel', {controller: :admin, action: :control_panel}, class: 'btn btn-primary' %>
+				<% end %>
+    </div>
+    <!-- END CONTENT FRAME BODY -->
+</div>

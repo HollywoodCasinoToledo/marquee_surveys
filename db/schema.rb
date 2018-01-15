@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171209003525) do
+ActiveRecord::Schema.define(version: 20180109162604) do
 
   create_table "admins", force: :cascade do |t|
     t.integer  "property_id",     limit: 4, null: false
@@ -22,11 +22,21 @@ ActiveRecord::Schema.define(version: 20171209003525) do
   end
 
   create_table "answers", force: :cascade do |t|
-    t.integer  "patron_id",   limit: 4
-    t.integer  "question_id", limit: 4
-    t.integer  "option_id",   limit: 4, null: false
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
+    t.integer  "question_id", limit: 4,   null: false
+    t.string   "title",       limit: 255, null: false
+    t.string   "picture",     limit: 255
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+    t.integer  "value",       limit: 4
+  end
+
+  create_table "categories", force: :cascade do |t|
+    t.integer  "property_id", limit: 4,   null: false
+    t.integer  "survey_id",   limit: 4,   null: false
+    t.string   "name",        limit: 255, null: false
+    t.integer  "parent",      limit: 4
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
   end
 
   create_table "comments", force: :cascade do |t|
@@ -35,14 +45,6 @@ ActiveRecord::Schema.define(version: 20171209003525) do
     t.text     "comment",     limit: 65535
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
-  end
-
-  create_table "options", force: :cascade do |t|
-    t.integer  "question_id", limit: 4,   null: false
-    t.string   "title",       limit: 255, null: false
-    t.string   "picture",     limit: 255
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
   end
 
   create_table "patrons", force: :cascade do |t|
@@ -58,15 +60,24 @@ ActiveRecord::Schema.define(version: 20171209003525) do
   end
 
   create_table "questions", force: :cascade do |t|
-    t.integer  "survey_id",  limit: 4,                   null: false
-    t.string   "title",      limit: 255,                 null: false
-    t.string   "style",      limit: 4
-    t.boolean  "multiple",               default: false
-    t.integer  "position",   limit: 4
-    t.boolean  "required",               default: false
-    t.integer  "parent",     limit: 4
-    t.datetime "created_at",                             null: false
-    t.datetime "updated_at",                             null: false
+    t.integer  "survey_id",   limit: 4,                   null: false
+    t.string   "title",       limit: 255,                 null: false
+    t.string   "style",       limit: 4
+    t.boolean  "multiple",                default: false
+    t.boolean  "required",                default: false
+    t.integer  "parent",      limit: 4
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
+    t.integer  "category_id", limit: 4
+    t.integer  "next_id",     limit: 4
+  end
+
+  create_table "responses", force: :cascade do |t|
+    t.integer  "patron_id",   limit: 4
+    t.integer  "question_id", limit: 4
+    t.integer  "answer_id",   limit: 4, null: false
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
   end
 
   create_table "surveys", force: :cascade do |t|

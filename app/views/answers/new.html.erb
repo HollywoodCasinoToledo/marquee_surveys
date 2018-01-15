@@ -1,0 +1,59 @@
+<% content_for :title, "New Answer" %>
+
+<!-- START BREADCRUMB -->
+<ul class="breadcrumb">
+	<li><a href="/">Home</a></li>  
+	<li>Control Panel</li> 
+	<li>Answers</li>
+	<li>New</li>           
+</ul>
+<!-- END BREADCRUMB --> 
+
+<div class="content-frame">
+  <div class="content-frame-top">                        
+    <div class="page-title">                    
+      <h2><span class="fa fa-cog"></span> Control Panel - Modify Survey</h2>
+    </div>                                      
+    <div class="pull-right">
+      <button class="btn btn-default content-frame-left-toggle"><span class="fa fa-bars"></span></button>
+    </div>                        
+  </div>
+  <!-- END CONTENT FRAME TOP -->
+  
+  <!-- START CONTENT FRAME LEFT -->
+  <div class="content-frame-left">
+		<%= render 'layouts/left_survey_contents' %>
+  </div>
+  <!-- END CONTENT FRAME LEFT -->
+  
+  <!-- START CONTENT FRAME BODY -->
+  <div class="content-frame-body">
+              
+		<h2><span class="fa fa-plus"></span> Add Answer</h2>
+		<%= form_for :answer, :url => {:controller => :answers, action: :create} do |f| %>
+    <div class="panel panel-default max-x-1000">
+    	<div class="panel-heading">
+        <h3 class="panel-title">Question: <%= @question.title %></h3>
+    	</div>
+    	<div class="panel-body">
+      	<%= f.hidden_field :question_id, value: @question.id %>
+      
+        <div class="form-group">
+          <p><label for = "answer_name">Answer</label>:
+          <%= f.text_field :title, id: 'answer', class: 'form-control' %></p>
+
+	        <% if @question.style == Question::STYLE_GRID %>
+		        <p><label for = "answer_picture">Picture</label>:<br>
+		          <%= f.file_field :picture, class: 'form-control' %></p>
+		          <p><i>Hint: Crop picture to 150 x 150 size.</i></p>
+	        <% end %>
+        </div>
+
+        <%= f.submit 'Add Answer', class: 'btn btn-primary' %>
+				<%= link_to 'Cancel', {controller: :admin, action: :control_panel}, class: 'btn btn-primary' %>
+      </div>
+    </div>
+    <% end -%>
+  </div>
+    <!-- END CONTENT FRAME BODY -->
+</div>

@@ -2310,8 +2310,7 @@ body {
 .row [class^='col-md-'],
 .row [class^='col-lg-'] {
   min-height: 1px;
-  padding-left: 10px;
-  padding-right: 10px;
+  padding: 10px;
 }
 .row.stacked [class^='col-xs-'],
 .row.stacked [class^='col-sm-'],
@@ -2430,11 +2429,11 @@ body {
   margin-bottom: 20px;
 }
 .page-container .page-content .content-frame .content-frame-body {
-  padding: 10px 10px 10px 10px;
+  padding: 75px 10px 10px 15px;
   margin-left: 300px;
 }
 .page-container .page-content .content-frame .content-frame-body-full {
-  padding: 10px 10px 10px 10px;
+  padding: 75px 10px 10px 15px;
   margin-left: 0px;
 }
 .page-container .page-content .content-frame .content-frame-body.content-frame-body-left {
@@ -3731,8 +3730,6 @@ body.page-container-boxed.wall_10 {
 }
 .list-group .list-group-item:last-child {
   border-bottom: 0px;
-	border-bottom-right-radius: 5px;
-  border-bottom-left-radius: 5px;
 }
 .list-group.list-group-simple {
   border: 0px;
@@ -3743,9 +3740,13 @@ body.page-container-boxed.wall_10 {
   background: transparent;
   padding: 5px 10px;
 }
+.list-group .list-group-item:first-child {
+  border-top: 0px;
+  border-radius: 0px;
+}
 .list-group.border-bottom .list-group-item:last-child {
   border-bottom: 1px solid #E5E5E5;
-
+  border-radius: 0px;
 }
 .list-group.list-group-navigation {
   border: 0px;
@@ -3758,18 +3759,6 @@ body.page-container-boxed.wall_10 {
   -moz-border-radius: 0px;
   -webkit-border-radius: 0px;
   border-radius: 0px;
-}
-.padding-0 .list-group {
-  border: 0px;
-}
-.padding-0 .list-group .list-group-item {
-  border-width: 1px 0px 0px 0px;
-  -moz-border-radius: 0px;
-  -webkit-border-radius: 0px;
-  border-radius: 0px;
-}
-.padding-0 .list-group .list-group-item:first-child {
-  border-top: 0px;
 }
 .list-group-item.active,
 .list-group-item.active:hover,
@@ -11979,7 +11968,8 @@ p.sub-note {
 .page-controls .page-control-btn.control-btn-right {
 	float: right;
 }
-.options-boolean {
+
+.options-button {
   padding: 37px;
   background-color: #0000004a;
   border-radius: 5px;
@@ -11987,13 +11977,16 @@ p.sub-note {
   color: #fff8c6;
   font-size: 25px;
 }
-.options-boolean:hover {
+.options-button:hover {
 	cursor: pointer;
 	background-color: #00000059;
 }
-.options-boolean:active {
+.options-button:active {
   background-color: #00000069;
   cursor: pointer;
+}
+.options-button.selected {
+	color: #00000094;
 }
 
 .survey-group-name {
@@ -12008,6 +12001,30 @@ p.sub-note {
   border-radius: 20px;
   margin-bottom: 24px;
   background: #4c1a0e;
-  border: 3px solid#5b2013;
+  border: 3px solid #5b2013;
   z-index: 10;
+}
+
+.survey-group {
+  height: 60px;
+}
+
+.survey-group .options-button {
+	font-size: 17px;
+  padding: 12px
+}
+
+.survey-group .question {
+	color: #fff8c6;
+	text-align: right;
+	padding: 12px 12px 12px;
+	font-size: 18px;
+	font-weight: bold;
+}
+
+textarea.form-control.survey-comment {
+	border: 1px solid #4c1a0e;
+  background: #4c1a0e;
+  min-height: 150px;
+  color: #f1f1f1;
 }

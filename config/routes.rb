@@ -6,6 +6,22 @@ Rails.application.routes.draw do
   # root 'welcome#index'
    root 'patrons#home'
 
+   get 'admin'																	=> 'admin#control_panel'
+   get 'admin/survey'														=> 'admin#edit_survey'
+
+   get 'admin/category/new'											=> 'categories#new'
+   post 'admin/category/new'										=> 'categories#create'
+
+   get 'admin/question/new'											=> 'questions#new'
+   post 'admin/question/new'										=> 'questions#create'
+   get 'admin/question/:id/edit'								=> 'questions#edit'
+   patch 'admin/question/:id/edit'							=> 'questions#update'
+
+   get 'admin/answer/new'												=> 'answers#new'
+   post 'admin/answer/new'											=> 'answers#create'
+   get 'admin/answer/:id/edit'									=> 'answers#edit'
+   patch 'admin/answer/:id/edit'								=> 'answers#update'
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

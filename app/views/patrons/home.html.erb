@@ -14,7 +14,7 @@
 
 	<h1 id="question">Are you a Marquee Rewards member?</h1>
 
-	<% case 2 %>
+	<% case 1 %>
 		<% when Question::STYLE_BOOL %>
 		<%= render 'options/style_bool' %>
 		<% when Question::STYLE_RATE_3 %>
@@ -28,7 +28,7 @@
 		<% when Question::STYLE_CMNT %>
 		<%= render 'options/style_comment' %>
 		<% else %>
-		<%= render 'options/style_list' %>
+		<%= render 'options/style_rate_3_group' %>
 	<% end %>
 
 </div>

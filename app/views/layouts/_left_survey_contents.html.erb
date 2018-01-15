@@ -1,0 +1,32 @@
+<div class="list-group"> 	
+
+	<% previous_category = nil
+		@nav_questions.each do |q| %>
+		<% if previous_category.nil? && !q.category_id.nil? %>
+			<div class="list-group-item category">
+				<b><%= Category.find(q.category_id).name %></b>
+			</div>
+		<% elsif !previous_category.nil? && q.category_id.nil? %>
+			<div class="end-category"></div>
+		<% end %>
+
+	  <div class="list-group-item question" data-id="<%= q.id %>">   
+	    <span><%= q.title %></span>
+	    <div class="list-group-controls options hidden">
+        <%= link_to controller: :answers, action: :new, question: q.id do %><span class="fa fa-plus pull-right"></span><% end %>
+        <%= link_to controller: :questions, action: :edit, id: q.id do %><span class="fa fa-pencil pull-right"></span><% end %>
+      </div>
+	  </div>
+
+	  <% Answer.where(question_id: q.id).each do |a| %>
+		<div class="list-group-item answer <%= 'hidden' unless !@question.nil? && q.id == @question.id %>" data-question="<%= q.id %>"><%= a.title %>
+			<div class="list-group-controls options hidden">
+        <%= link_to controller: :answers, action: :edit, id: a.id do %><span class="fa fa-pencil pull-right"></span><% end %>
+      </div>
+		</div>
+		<% end %>
+		
+		<% previous_category = q.category_id %>
+	<% end %>
+
+</div>

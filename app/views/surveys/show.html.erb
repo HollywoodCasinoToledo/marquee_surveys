@@ -1,0 +1,40 @@
+<% content_for :title, "Control Panel" %>
+
+<!-- START TITLE -->
+<div class="page-title">                    
+  <%= image_tag "Marquee-Logo.png" %>
+</div>
+<!-- END TITLE -->
+
+<div class="page-container">
+
+	<div class="survey-group-name">
+		Restaurants
+	</div>
+
+	<h1 id="question">Are you a Marquee Rewards member?</h1>
+
+	<% case 2 %>
+		<% when Question::STYLE_BOOL %>
+		<%= render 'options/style_bool' %>
+		<% when Question::STYLE_RATE_3 %>
+		<%= render 'options/style_rate_3' %>
+		<% when Question::STYLE_RATE_5 %>
+		<%= render 'options/style_rate_5' %>
+		<% when Question::STYLE_LIST %>
+		<%= render 'options/style_list' %>
+		<% when Question::STYLE_GRID %>
+		<%= render 'options/style_grid' %>
+		<% when Question::STYLE_CMNT %>
+		<%= render 'options/style_comment' %>
+		<% else %>
+		<%= render 'options/style_comment' %>
+	<% end %>
+
+</div>
+
+<div class="page-controls">
+
+	<%= render 'surveys/layout_survey_controls' %>
+
+</div>
