@@ -10,88 +10,101 @@
 <!-- END BREADCRUMB --> 
 
 <div class="content-frame">
-    <div class="content-frame-top">                        
-      <div class="page-title">                    
-        <h2><span class="fa fa-cog"></span> Control Panel</h2>
-      </div>                                      
-      <div class="pull-right">
-        <button class="btn btn-default content-frame-left-toggle"><span class="fa fa-bars"></span></button>
-      </div>                        
-    </div>
-    <!-- END CONTENT FRAME TOP -->
-    
-    <!-- START CONTENT FRAME LEFT -->
-    <div class="content-frame-left">
-			<%= render 'layouts/left_survey_contents' %>
-    </div>
-    <!-- END CONTENT FRAME LEFT -->
-    
-    <!-- START CONTENT FRAME BODY -->
-    <div class="content-frame-body">
-                
-  		<h2><span class="fa fa-pencil"></span> Edit Question</h2>
-      <div class="panel panel-default panel-body max-x-1000">
-				<%= form_for :question, :url => {:controller => :questions, action: :update}, method: :patch do |f| %>
-	      	<%= f.hidden_field :survey_id, value: 1 %></p>
+  <div class="content-frame-top">                        
+    <div class="page-title">                    
+      <h2><span class="fa fa-cog"></span> Control Panel</h2>
+    </div>                                      
+    <div class="pull-right">
+      <button class="btn btn-default content-frame-left-toggle"><span class="fa fa-bars"></span></button>
+    </div>                        
+  </div>
+  <!-- END CONTENT FRAME TOP -->
+  
+  <!-- START CONTENT FRAME LEFT -->
+  <div class="content-frame-left">
+		<%= render 'layouts/left_survey_contents' %>
+  </div>
+  <!-- END CONTENT FRAME LEFT -->
+  
+  <!-- START CONTENT FRAME BODY -->
+  <div class="content-frame-body">
+              
+		<h2><span class="fa fa-pencil"></span> Edit Question</h2>
+    <div class="panel panel-default panel-body max-x-1000">
+			<%= form_for :question, :url => {:controller => :questions, action: :update}, method: :patch do |f| %>
+      	<%= f.hidden_field :survey_id, value: 1 %></p>
 
-      	 	<div class="form-group">
-	          <p><label for="poll">Category</label><br>
-	          <%= f.select :category_id, @categories, {include_blank: 'None', value: @category}, class: 'form-control' %></p>
-	        </div>
+    	 	<div class="form-group">
+          <p><label for="poll">Category</label><br>
+          <%= f.select :category_id, @categories, {include_blank: 'None', value: @category}, class: 'form-control' %></p>
+        </div>
+      
+        <div class="form-group">
+          <p><label for = "question_name">Question</label>:
+          <%= f.text_field :title, id: 'question', class: 'form-control' %></p>
+        </div>
 
-    			<div class="form-group">
-	          <p><label for="next">Move before question:</label>
-	          <%= f.select :next_id, grouped_options_for_select(@reorder_hash.to_a),{include_blank: 'Do not move'},{class: 'form-control y-500'} %></p>
-	        </div>
-	      
-	        <div class="form-group">
-	          <p><label for = "question_name">Question</label>:
-	          <%= f.text_field :title, id: 'question', class: 'form-control' %></p>
-	        </div>
+        <p><label for = "prize_image">Question Type</label>:<br>
 
-          <p><label for = "prize_image">Question Type</label>:<br>
+        <%= f.hidden_field :style, value: Question::STYLE_LIST, id: 'style' %></p>
+        <div class="btn-group">
+          <div id="<%= Question::STYLE_LIST %>" class="btn btn-default btn-primary question_style_button"><span class="fa fa-bars"></span></div>
+          <div id="<%= Question::STYLE_GRID %>" class="btn btn-default question_style_button"><span class="fa fa-th-large"></span></div> 
+          <div id="<%= Question::STYLE_BOOL %>" class="btn btn-default question_style_button"><b>Y/N</b></div>                                              
+          <div id="<%= Question::STYLE_RATE_3 %>" class="btn btn-default question_style_button"><b>1-3</b></div> 
+          <div id="<%= Question::STYLE_RATE_5 %>" class="btn btn-default question_style_button"><b>1-5</b></div>     
+          <div id="<%= Question::STYLE_CMNT %>" class="btn btn-default question_style_button"><span class="fa fa-quote-left"></span></div>                                     
+        </div></p>
 
-          <%= f.hidden_field :style, value: Question::STYLE_LIST, id: 'style' %></p>
-          <div class="btn-group">
-            <div id="<%= Question::STYLE_LIST %>" class="btn btn-default btn-primary question_style_button"><span class="fa fa-bars"></span></div>
-            <div id="<%= Question::STYLE_GRID %>" class="btn btn-default question_style_button"><span class="fa fa-th-large"></span></div> 
-            <div id="<%= Question::STYLE_BOOL %>" class="btn btn-default question_style_button"><b>Y/N</b></div>                                              
-            <div id="<%= Question::STYLE_RATE_3 %>" class="btn btn-default question_style_button"><b>1-3</b></div> 
-            <div id="<%= Question::STYLE_RATE_5 %>" class="btn btn-default question_style_button"><b>1-5</b></div>     
-            <div id="<%= Question::STYLE_CMNT %>" class="btn btn-default question_style_button"><span class="fa fa-quote-left"></span></div>                                     
-          </div></p>
+        <p><label for="question_required">Require response: </label>
+        	<label class="switch switch-small">
+          <%= f.check_box :required, {}, 'true', 'false' %>
+          <span></span>
+        </label></p>
 
-          <p><label for="question_required">Require response: </label>
-          	<label class="switch switch-small">
-            <%= f.check_box :required, {}, 'true', 'false' %>
-            <span></span>
-          </label></p>
+        <p><label for="poll_multiple">Multi-voting: </label>
+        	<label class="switch switch-small">
+          <%= f.check_box :multiple, id: 'multiple' %>
+          <span></span>
+          <p class="tiny-note">Multi-voting will only apply to list and grid questions. IMPORTANT: Cannot change this after creating the question.</p>
+        </label></p>
 
-          <p><label for="poll_multiple">Multi-voting: </label>
-          	<label class="switch switch-small">
-            <%= f.check_box :multiple, id: 'multiple' %>
-            <span></span>
-            <p class="tiny-note">Multi-voting will only apply to list and grid questions. IMPORTANT: Cannot change this after creating the question.</p>
-          </label></p>
+        <div class="row">
+			    <div class="col-md-10">
+			      <div class="panel panel-gray panel-body">
 
-          <div class="row">
-				    <div class="col-md-10">
-				      <div class="panel panel-gray panel-body">
+			        <div class="form-group">
+			          <p><label for="next">Before question:</label>
+			          <%= f.select :next_id, options_for_select(@questions.to_a, @question.next_id),{include_blank: 'Do not move'},{class: 'form-control y-500'} %></p>
+			        </div>
 
-				        <div class="form-group">
-				          <p><label for="poll">Parent Answer: (must select answer to access this question)</label><br></p>
-				          <b><p id="required_question"></p></b>
-				          <p><%= f.select :parent, grouped_options_for_select(@selection_hash.to_a), {include_blank: 'Any'},{class: 'form-control y-500'} %></p>
-				        </div>
-				      </div>
-				  	</div>
-				  </div>
+			        <div class="form-group">
+			          <p><label for="poll">Parent Answer: (must select answer to access this question)</label><br></p>
+			          <b><p id="required_question"></p></b>
+			          <p><%= f.select :parent, grouped_options_for_select(@parent_hash.to_a), {include_blank: 'Any'},{class: 'form-control y-500'} %></p>
+			        </div>
+			      </div>
+			  	</div>
+			  </div>
 
-          <%= f.submit 'Save', class: 'btn btn-primary' %>
-					<%= link_to 'Cancel', {controller: :admin, action: :control_panel}, class: 'btn btn-primary' %>
+        <%= f.submit 'Save', class: 'btn btn-primary' %>
+				<%= link_to 'Cancel', {controller: :admin, action: :control_panel}, class: 'btn btn-primary' %>
 
-  	<% end -%>
-    </div>
+			<% end -%>
+	  </div>
 
-    <!-- END CONTENT FRAME BODY -->
+		<div class="row">
+			<div class="col-md-10">
+	  		<div class="panel panel-gray panel-body">
+	  			<ul>
+	  				<li>If question is in a category, the question can only be moved before or after questions in its own category.</li>
+	  				<li>Question must be in a category if attempting to reorder it between two quesitons in the same category.</li>
+	  				<li>Parent question must be before the current question.</li>
+	  				<li>If question is a parent of another question or category, it cannot be moved below one of those items.</li>
+	  			</ul>
+	  		</div>
+	  	</div>
+		</div>
+
+	</div>
 </div>

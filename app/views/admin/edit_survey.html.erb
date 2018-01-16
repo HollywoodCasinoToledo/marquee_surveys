@@ -29,10 +29,12 @@
   <div class="content-frame-body">
   	<div class="row">
 			<div class="col-md-6">
-		    
+		    <%= link_to 'New Question', {controller: :questions, action: :new}, class: 'btn btn-primary' %>
 			</div>
 		</div>
 
   </div>
     <!-- END CONTENT FRAME BODY -->
+    <%= @nav_questions.collect(&:id) %><br/>
+    <%= @orderized %>
 </div>

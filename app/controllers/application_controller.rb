@@ -5,17 +5,7 @@ class ApplicationController < ActionController::Base
 
   def include_navigation_pane_variables
 		@nav_categories = Category.where(survey_id: 1).to_a.map(&:id)
-		@test = Question.all.to_a.map!{ |q| [q.id, q.next_id] }
-		@orderized = Array.new
-		data = @test.to_h.invert
-		current = data[nil]
-		@orderized.push(current)
-		begin
-			current = data[current]
-			@orderized.push(current)
-		end until data[current].nil?
-
-		@nav_questions = Question.find(@orderized)
+		@nav_questions = Question.get_all_in_order
   end
 
 end

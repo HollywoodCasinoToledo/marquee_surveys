@@ -11,6 +11,7 @@ class CategoriesController < ApplicationController
 	end
 
 	def new
+		include_navigation_pane_variables
 		@selection_hash = Hash.new
 		@selection_hash.default = []
 		Answer.joins(:question).where('questions.survey_id = ?', 1).each do |a|
