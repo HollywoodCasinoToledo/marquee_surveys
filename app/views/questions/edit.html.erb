@@ -101,6 +101,7 @@
 	  				<li>Question must be in a category if attempting to reorder it between two quesitons in the same category.</li>
 	  				<li>Parent question must be before the current question.</li>
 	  				<li>If question is a parent of another question or category, it cannot be moved below one of those items.</li>
+	  				<li><%= Category.find(@question.category_id).find_tail %></li>
 	  			</ul>
 	  		</div>
 	  	</div>

@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
 
   def include_navigation_pane_variables
 		@nav_categories = Category.where(survey_id: 1).to_a.map(&:id)
-		@nav_questions = Question.get_all_in_order
+		@nav_questions = Question.order(:position)
   end
 
 end

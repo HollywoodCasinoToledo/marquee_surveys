@@ -27,55 +27,44 @@ class Question < ActiveRecord::Base
 		end
 	end
 
-	def self.get_all_in_order
-		questions = Question.where(survey_id: 1).to_a.map!{ |q| [q.id, q.next_id] }
-		orderized = Array.new
-		questions_hashed = questions.to_h.invert
-		current = questions_hashed[nil]
-		orderized.push(current)
-		begin
-			current = questions_hashed[current]
-			orderized.push(current)
-		end until questions_hashed[current].nil?
-		orderized.reverse!
-		Question.find(orderized).index_by(&:id).slice(*orderized).values
-	end
-
-	def get_possible_parents
-		@selection_hash = Hash.new
-		@selection_hash.default = []
-		questions = Question.get_all_in_order.to_a.map(&:id).split(self.id)[0]
-		Question.where(id: questions).each_with_index do |q, i|
-			pos = (i.to_i + 1).to_s + ". "
-			a = Answer.where(question_id: q.id).each do |a|
-				if @selection_hash.include? pos + q.title
-					@selection_hash[pos + q.title].push [a.title, a.id.to_s]
-				else
-					@selection_hash[pos + q.title] = [[a.title, a.id.to_s]]
-				end
-			end
-		end
-		return @selection_hash
-	end
-
 	def has_parent_answers?
 		answer_ids = Answer.where(question_id: self.id).map(&:id)
 		!Question.where(parent: answer_ids).blank? || !Category.where(parent: answer_ids).blank?
 	end
 
-	def reorder_before(question_id)
-		after_question = Question.find(question_id)
-		before_question = Question.find_by(next_id: question_id)
-		if after_question.category_id == before_question.category_id && self.category_id != after_question.category_id
-			raise Exceptions::QuestionOrderError.new("Question must first be put into corresponding category."), Category.find(after_question.category_id).name 
+	def assign_position
+		if self.category_id.nil?
+			self.place_at_end_of_survey
 		else
-			Question.find_by(next_id: self.id).update_attribute(:next_id, nil)
-			before_question.update_attribute(:next_id, self.id)
-			self.update_attribute(:next_id, after_question.id)
-
+			category_end = Question.where(category_id: self.category_id).order(:position).last
+			if !category_end.position.nil? && !Question.find_by(position: category_end.position + 1).nil?
+				# If the quesiton belongs to a category and the category has questions after the end of the category,
+				# move the following questions down and insert this quesiton into a position within the category.
+				question_following_category = Question.find_by(position: category_end.position + 1)
+				self.move_before(question_following_category)
+			else
+				# Simply added to the bottom as the last question.
+				self.place_at_end_of_survey
+			end
 		end
+	end
+
+	def move_before(question)
+		pos = question.position
+		Question.where('position >= ?', pos).update_all("position = position + 1")
+		self.update_attribute(:position, pos)
+	end
+
+	def place_at_beginning_of_survey
+
+	end
+
+	def place_at_end_of_survey
+		self.update_attribute(:position, Question.where(survey_id: 1).order(:position).last.position + 1)
 	end
 
 	scope :in_same_category, -> (question) { where(category_id: question.category_id) if !question.category_id.nil? }
 
 end
+
+Question.where(category_id: 5).order(:position).last

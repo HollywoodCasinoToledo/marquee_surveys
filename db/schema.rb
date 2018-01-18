@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180109162604) do
+ActiveRecord::Schema.define(version: 20180118152111) do
 
   create_table "admins", force: :cascade do |t|
     t.integer  "property_id",     limit: 4, null: false
@@ -70,6 +70,7 @@ ActiveRecord::Schema.define(version: 20180109162604) do
     t.datetime "updated_at",                              null: false
     t.integer  "category_id", limit: 4
     t.integer  "next_id",     limit: 4
+    t.integer  "position",    limit: 4
   end
 
   create_table "responses", force: :cascade do |t|
