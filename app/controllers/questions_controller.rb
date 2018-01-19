@@ -23,8 +23,8 @@ class QuestionsController < ApplicationController
 		@question = Question.find(params[:id])
 		@categories = Hash.new
 		Category.where(property_id: 25).to_a.each { |c| @categories[c.name] = c.id }
-		@questions = Question.get_all_in_order.to_a.map!.with_index { |q, i| [(i.to_i + 1).to_s + ". " + q.title, q.id] }
-		@parent_hash = @question.get_possible_parents
+		@questions = Question.order(:position).to_a.map!.with_index { |q, i| [(i.to_i + 1).to_s + ". " + q.title, q.id] }
+		@parent_hash = Answer.as_select_hash(1)
 	end
 
 	def new
@@ -35,9 +35,11 @@ class QuestionsController < ApplicationController
 
 	def update
 		question = Question.find(params[:id])
+		category_id = question.category_id
 		question.update_attributes(question_params)
 		begin
-			question.reorder_before(params[:question][:next_id])
+			question.reorder_before(Question.find(params[:question][:next_id])) if !params[:question][:next_id].blank?
+			question.assign_position if category_id != question.category_id # Reassign position if category changed
 		rescue Exceptions::QuestionOrderError => error
 			flash[:title] = "Error"
 			flash[:notice] = error.message

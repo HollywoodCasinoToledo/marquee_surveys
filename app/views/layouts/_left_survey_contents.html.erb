@@ -1,12 +1,12 @@
 <div class="list-group"> 	
 
-	<% previous_category = nil
-		@nav_questions.each do |q| %>
-		<% if previous_category.nil? && !q.category_id.nil? %>
+	<% @nav_questions.each do |q| %>
+		<% if @nav_category_starts.include? q.id %>
 			<div class="list-group-item category">
 				<b><%= Category.find(q.category_id).name %></b>
 			</div>
-		<% elsif !previous_category.nil? && q.category_id.nil? %>
+		<% end %>
+		<% if q.category_id.nil? %>
 			<div class="end-category"></div>
 		<% end %>
 
@@ -26,7 +26,6 @@
 		</div>
 		<% end %>
 		
-		<% previous_category = q.category_id %>
 	<% end %>
 
 </div>
