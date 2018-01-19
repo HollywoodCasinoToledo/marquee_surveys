@@ -38,6 +38,7 @@ class QuestionsController < ApplicationController
 		category_id = question.category_id
 		question.update_attributes(question_params)
 		begin
+			if 
 			question.reorder_before(Question.find(params[:question][:next_id])) if !params[:question][:next_id].blank?
 			question.assign_position if category_id != question.category_id # Reassign position if category changed
 		rescue Exceptions::QuestionOrderError => error

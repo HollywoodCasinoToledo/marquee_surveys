@@ -81,7 +81,7 @@
 			        <div class="form-group">
 			          <p><label for="poll">Parent Answer: (must select answer to access this question)</label><br></p>
 			          <b><p id="required_question"></p></b>
-			          <p><%= f.select :parent, grouped_options_for_select(@parent_hash.to_a), {include_blank: 'Any'},{class: 'form-control y-500'} %></p>
+			          <p><%= f.select :parent, grouped_options_for_select(@question.get_possible_parents.to_a), {include_blank: 'Any'},{class: 'form-control y-500'} %></p>
 			        </div>
 			      </div>
 			  	</div>

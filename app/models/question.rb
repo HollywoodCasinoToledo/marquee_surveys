@@ -10,6 +10,8 @@ class Question < ActiveRecord::Base
 	STYLE_BOOL = "BOOL"
 	STYLE_CMNT = "CMNT"
 
+	scope :in_same_category, -> (question) { where(category_id: question.category_id) if !question.category_id.nil? }
+
 	def autogenerate_answers
 		if self.style == STYLE_BOOL
 			Answer.create(title: "Yes", question_id: self.id).save
@@ -26,13 +28,6 @@ class Question < ActiveRecord::Base
 			Answer.create(title: "Very Poor", value: 1, question_id: self.id).save
 		end
 	end
-
-	def has_parent_answers?
-		answer_ids = Answer.where(question_id: self.id).map(&:id)
-		!Question.where(parent: answer_ids).blank? || !Category.where(parent: answer_ids).blank?
-	end
-
-
 
 	def assign_position
 		if self.category_id.nil? || @nav_questions.blank?
@@ -51,6 +46,19 @@ class Question < ActiveRecord::Base
 		end
 	end
 
+	def has_parent_answers?
+		answer_ids = Answer.where(question_id: self.id).map(&:id)
+		!Question.where(parent: answer_ids).blank? || !Category.where(parent: answer_ids).blank?
+	end
+
+	def has_parent_order_conflicts?(question)
+		valid = true
+		parent = Question.find(self.parent_id) if !self.parent_id.nil?
+		children = Question.where(parent_id: self.id).order(:position)
+		valid = false if question.position <= parent.position 
+		valid = false if !children.nil? && (children.last.position <= question.position)
+	end
+
 	def reorder_before(question)
 		if self.valid_reorder_before(question)
 			pos = question.position
@@ -61,17 +69,6 @@ class Question < ActiveRecord::Base
 		end
 	end
 
-	def valid_reorder_before(question)
-		before_question = Question.find_by(position: question.position - 1)
-		if self.category_id.nil?
-			# If question has no category, it cannot be placed between two quesitons that do share a category
-			return false if question.category_id == before_question.category_id
-		else
-			# If in a category, there must be a question either above or below the new position that belongs to teh same category
-			return true if self.category_id == before_question.category_id || question.category_id == self.category_id
-		end
-		return true
-	end
 
 	def place_at_end_of_category
 		last_question = Question.where(category_id: self.category_id).order(:position).last
@@ -91,6 +88,37 @@ class Question < ActiveRecord::Base
 		end
 	end
 
-	scope :in_same_category, -> (question) { where(category_id: question.category_id) if !question.category_id.nil? }
+	def valid_reorder_before(question)
+		before_question = Question.find_by(position: question.position - 1)
+		if self.category_id.nil?
+			# If question has no category, it cannot be placed between two quesitons that do share a category
+			return false if question.category_id == before_question.category_id
+		else
+			# If in a category, there must be a question either above or below the new position that belongs to teh same category
+			return true if self.category_id == before_question.category_id || question.category_id == self.category_id
+		end
+		return true
+	end
+
+
+
+	def get_possible_parents
+		@selection_hash = Hash.new
+		@selection_hash.default = []
+		questions = Question.where(survey_id: 1).where('position < ?', self.position).to_a.map(&:id)
+		Question.where(id: questions).order(:position).each_with_index do |q, i|
+			pos = (i.to_i + 1).to_s + ". "
+			a = Answer.where(question_id: q.id).each do |a|
+				if @selection_hash.include? pos + q.title
+					@selection_hash[pos + q.title].push [a.title, a.id.to_s]
+				else
+					@selection_hash[pos + q.title] = [[a.title, a.id.to_s]]
+				end
+			end
+		end
+		return @selection_hash
+	end
+
+
 
 end
