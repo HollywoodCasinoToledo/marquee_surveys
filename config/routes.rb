@@ -16,6 +16,7 @@ Rails.application.routes.draw do
    post 'admin/question/new'										=> 'questions#create'
    get 'admin/question/:id/edit'								=> 'questions#edit'
    patch 'admin/question/:id/edit'							=> 'questions#update'
+   get 'admin/question/:id/move'								=> 'questions#move'
 
    get 'admin/answer/new'												=> 'answers#new'
    post 'admin/answer/new'											=> 'answers#create'

@@ -1,0 +1,60 @@
+<% content_for :title, "Move Question" %>
+
+<!-- START BREADCRUMB -->
+<ul class="breadcrumb">
+	<li><a href="/">Home</a></li>  
+	<li>Control Panel</li> 
+	<li>Questions</li>
+	<li>Edit</li>           
+</ul>
+<!-- END BREADCRUMB --> 
+
+<div class="content-frame">
+  <div class="content-frame-top">                        
+    <div class="page-title">                    
+      <h2><span class="fa fa-cog"></span> Control Panel</h2>
+    </div>                                      
+    <div class="pull-right">
+      <button class="btn btn-default content-frame-left-toggle"><span class="fa fa-bars"></span></button>
+    </div>                        
+  </div>
+  <!-- END CONTENT FRAME TOP -->
+  
+  <!-- START CONTENT FRAME LEFT -->
+  <div class="content-frame-left">
+		<%= render 'layouts/left_survey_contents' %>
+  </div>
+  <!-- END CONTENT FRAME LEFT -->
+  
+  <!-- START CONTENT FRAME BODY -->
+  <div class="content-frame-body">
+              
+		<h2><span class="fa fa-pencil"></span> Edit Question: Move</h2>
+		<div class="row">
+			<div class="col-md-6">
+	  		<div class="panel panel-gray panel-body">
+	  			<div class="dd" id="nestable">
+	  				<ol class="dd-list">
+	  					<% @ordered_array.each do |o| %>
+	  						<% if o.is_a?(Hash) %>
+		  						<li class="dd-item" data-id="1">
+			  						<div class="dd-handle category"><%= o.first[0] %></div>
+			  					</li>
+			  					<ol class="dd-list" style="">
+			  						<% o[o.first[0]].each do |q| %>
+			  							<li class="dd-item" data-id="3"><div class="dd-handle"><%= q %></div></li>
+			  						<% end %>
+			  					</ol>
+			  				<% else %>
+			  					<li class="dd-item" data-id="1">
+			  						<div class="dd-handle"><%= o %></div>
+			  					</li>
+			  				<% end %>
+		  				<% end %>
+	  				</ol>
+        	</div>
+	  		</div>
+	  	</div>
+		</div>
+	</div>
+</div>

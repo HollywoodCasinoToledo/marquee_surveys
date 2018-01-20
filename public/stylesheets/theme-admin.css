@@ -8881,6 +8881,14 @@ body.sidebar-opened .sidebar {
 .dd-item > button[data-action="collapse"]:before {
   content: '-';
 }
+.dd-handle.category {
+    background-color: #a5371f;
+    padding: 0px 0px 0px 0px;
+    color: #FFF;
+    margin-bottom: 0px;
+    line-height: 30px;
+    text-align: center;
+}
 .dd-placeholder,
 .dd-empty {
   margin: 5px 0;
