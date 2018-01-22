@@ -2,7 +2,7 @@ class QuestionsController < ApplicationController
 
 	layout 'application_admin'
 
-	before_action :include_navigation_pane_variables, only: [:edit, :new, :move]
+	before_action :include_navigation_pane_variables, only: [:edit, :new, :move, :parent]
 
 	def create
 		## survey = Survey.find(params[:question][:survey_id])
@@ -29,6 +29,7 @@ class QuestionsController < ApplicationController
 
 	def move
 		@ordered_array = Array.new
+		@question = Question.find(params[:id])
 		@questions = Question.all.map(&:category_id).map! { |x| x.nil? ? 0 : x }.chunk{|n| n}.map(&:first)
 		uncategorized_questions = Question.where(survey_id: 1, category_id: nil).map(&:title)
 		@questions.each do |x| 
@@ -38,6 +39,13 @@ class QuestionsController < ApplicationController
 				@ordered_array.push({Category.find(x).name => Question.where(category_id: x).map(&:title)})
 			end
 		end
+		@possible_moves = Array.new
+		if @question.category_id.nil?
+			@possible_moves = Question.where.not(id: @question.id).group('IFNULL(category_id, id)').order(:position).to_a.map.with_index { |q, i| [q.position.to_s + ". " + q.title, q.id] }
+		else
+			@possible_moves = Question.where.not(id: @question.id).where(category_id: @question.category_id).to_a.map.with_index { |q, i| [q.position.to_s + ". " + q.title, q.id] }
+		end
+		@possible_moves.push(['Move to end', 'move_to_end'])
 	end
 
 	def new
@@ -46,13 +54,37 @@ class QuestionsController < ApplicationController
 		@parent_hash = Answer.as_select_hash(1)
 	end
 
+	def parent
+		@ordered_array = Array.new
+		@question = Question.find(params[:id])
+		@questions = Question.all.map(&:category_id).map! { |x| x.nil? ? 0 : x }.chunk{|n| n}.map(&:first)
+		uncategorized_questions = Question.where(survey_id: 1, category_id: nil).map(&:title)
+		@questions.each do |x| 
+			if x == 0
+				@ordered_array.push(uncategorized_questions.shift)
+			else
+				@ordered_array.push({Category.find(x).name => Question.where(category_id: x).map(&:title)})
+			end
+		end
+		@question = Question.find(params[:id])
+		@parent_hash = Answer.as_select_hash(1)
+	end
+
 	def update
 		question = Question.find(params[:id])
 		category_id = question.category_id
 		question.update_attributes(question_params)
 		begin
-			question.reorder_before(Question.find(params[:question][:next_id])) if !params[:question][:next_id].blank?
-			question.assign_position if category_id != question.category_id # Reassign position if category changed
+			case params[:question][:operation]
+			when "move"
+				question.reorder_before(Question.find(params[:question][:next_id]))
+			when "move_to_end"
+				question.place_at_end_of_survey
+			when "parent"
+				question.update_attribute(:parent_id, params[:question][:parent])
+			else
+				question.assign_position
+			end
 		rescue Exceptions::QuestionOrderError => error
 			flash[:title] = "Error"
 			flash[:notice] = error.message
@@ -63,7 +95,7 @@ class QuestionsController < ApplicationController
 
 	private 
 		def question_params
-			params.require(:question).permit(:survey_id, :title, :style, :required, :parent, :category_id)
+			params.require(:question).permit(:survey_id, :title, :style, :required, :category_id)
 		end
 
 end

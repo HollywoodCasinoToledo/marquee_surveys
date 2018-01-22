@@ -33,16 +33,7 @@ class Question < ActiveRecord::Base
 		if self.category_id.nil? || @nav_questions.blank?
 			self.place_at_end_of_survey
 		else
-			category_end = Question.where.not(id: self.id).where(category_id: self.category_id).order(:position).last
-			if !category_end.position.nil? && !Question.find_by(position: category_end.position + 1).nil?
-				# If the quesiton belongs to a category and the category has questions after the end of the category,
-				# reorder the following questions down and insert this quesiton into a position within the category.
-				question_following_category = Question.find_by(position: category_end.position + 1)
-				self.reorder_before(question_following_category)
-			else
-				# Simply added to the bottom as the last question.
-				self.place_at_end_of_survey
-			end
+			self.place_at_end_of_category
 		end
 	end
 
@@ -60,20 +51,32 @@ class Question < ActiveRecord::Base
 	end
 
 	def reorder_before(question)
-		if self.valid_reorder_before(question)
-			pos = question.position
-			Question.where('position >= ?', pos).update_all("position = position + 1")
-			self.update_attribute(:position, pos)
+		old_pos = self.position
+		new_pos = question.position
+		if old_pos < new_pos
+			Question.where('position < ? AND position > ?', new_pos, old_pos).update_all("position = position - 1")
+			self.update_attribute(:position, new_pos - 1)
 		else
-			raise Exceptions::QuestionOrderError.new("Question must first be put into corresponding category."), Category.find(question.category_id).name 
-		end
+		 	Question.where('position >= ? AND position < ?', new_pos, old_pos).update_all("position = position + 1")
+		 	self.update_attribute(:position, new_pos)
+		end 
 	end
-
 
 	def place_at_end_of_category
 		last_question = Question.where(category_id: self.category_id).order(:position).last
 		if !last_question.nil? && !last_question.position.nil?
-			self.update_attribute(:position, last_question.position + 1)
+			self.reorder_before(Question.find_by(position: last_question.position + 1))
+		else
+			self.update_attribute(:position, 1)
+		end
+	end
+
+	def move_to_end_of_category
+		last_question = Question.where(survey_id: 1).order(:position).last
+		old_position = self.position
+		if !last_question.nil? && !last_question.position.nil?
+			Question.where('position > ?', old_position).update_all("position = position - 1")
+			self.reorder_before(Question.find_by(position: last_question.position + 1))
 		else
 			self.update_attribute(:position, 1)
 		end
@@ -83,6 +86,17 @@ class Question < ActiveRecord::Base
 		last_question = Question.where(survey_id: 1).order(:position).last
 		if !last_question.nil? && !last_question.position.nil?
 			self.update_attribute(:position, last_question.position + 1)
+		else
+			self.update_attribute(:position, 1)
+		end
+	end
+
+	def move_to_end_of_survey
+		last_question = Question.where(survey_id: 1).order(:position).last
+		old_position = self.position
+		if !last_question.nil? && !last_question.position.nil?
+			self.update_attribute(:position, last_question.position + 1)
+			Question.where('position > ?', old_position).update_all("position = position - 1")
 		else
 			self.update_attribute(:position, 1)
 		end

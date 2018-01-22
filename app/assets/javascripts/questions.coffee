@@ -109,6 +109,15 @@ $(document).ready ->
     return
   )
 
+  $('#question_next_id').on('change', ->
+    selected = $('#question_next_id :selected').val()
+    if selected != "move_to_end"
+      $('#question_operation').val('move')
+    else
+      $('#question_operation').val('move_to_end')
+    return
+  )
+
   $('.question').on('click', ->
     $('.list-group-item.answer[data-question=' + $(this).data("id") + ']').toggleClass("hidden")
     return
