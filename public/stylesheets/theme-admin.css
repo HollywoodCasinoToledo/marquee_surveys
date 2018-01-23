@@ -2371,7 +2371,7 @@ body {
   float: left;
   width: 100%;
   position: relative;
-  background: #e8e8e8;
+	background: #f5f5f5 url(../images/bg.png) left top repeat
 }
 .page-container .page-content .content-frame .content-frame-top {
   float: left;
@@ -4029,7 +4029,7 @@ a div span {
 .panel.panel-default {
   border-top-color: #F5F5F5;
   border-top-width: 1px;
-  background-color: #f5f5f5;
+  background-color: #ffffff;
 }
 .panel.panel-default.selected {
 	color: #ffffff;
@@ -5100,6 +5100,22 @@ label.valid {
   background-color: #b64645;
   color: rgba(255, 255, 255, 0.80);
   border-color: #af4342;
+}
+.alert-compact {
+  float: left;
+  width: 100%;
+  padding: 15px;
+  margin-bottom: 15px;
+  line-height: 21px;
+  border: 0px;
+  border-radius: 3px;
+}
+.alert-warning-light {
+	background-color: #ffd69c;
+	color: rgba(99, 82, 33, 0.8);
+	border-color: #ffffff;
+	margin: 0px 0px 15px;
+	border-radius: 3px;
 }
 /* EOF ALERTS */
 /* DROP DOWN */

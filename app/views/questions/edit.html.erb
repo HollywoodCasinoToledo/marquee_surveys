@@ -29,7 +29,10 @@
   <!-- START CONTENT FRAME BODY -->
   <div class="content-frame-body">
               
-		<h2><span class="fa fa-pencil"></span> Edit Question</h2>
+		<h2><span class="fa fa-pencil"></span> Edit Question
+		<%= link_to 'Move', {controller: :questions, action: :move, id: @question.id}, class: 'btn btn-primary' %>
+		<%= link_to 'Edit Parent', {controller: :questions, action: :parent, id: @question.id}, class: 'btn btn-primary' %>
+		</h2>
     <div class="panel panel-default panel-body max-x-1000">
 			<%= form_for :question, :url => {:controller => :questions, action: :update}, method: :patch do |f| %>
       	<%= f.hidden_field :survey_id, value: 1 %></p>
@@ -69,42 +72,11 @@
           <p class="tiny-note">Multi-voting will only apply to list and grid questions. IMPORTANT: Cannot change this after creating the question.</p>
         </label></p>
 
-        <div class="row">
-			    <div class="col-md-10">
-			      <div class="panel panel-gray panel-body">
-
-			        <div class="form-group">
-			          <p><label for="next">Before question:</label>
-			          <%= f.select :next_id, options_for_select(@questions.to_a, @question.next_id),{include_blank: 'Do not move'},{class: 'form-control y-500'} %></p>
-			        </div>
-
-			        <div class="form-group">
-			          <p><label for="poll">Parent Answer: (must select answer to access this question)</label><br></p>
-			          <b><p id="required_question"></p></b>
-			          <p><%= f.select :parent, grouped_options_for_select(@question.get_possible_parents.to_a), {include_blank: 'Any'},{class: 'form-control y-500'} %></p>
-			        </div>
-			      </div>
-			  	</div>
-			  </div>
-
         <%= f.submit 'Save', class: 'btn btn-primary' %>
 				<%= link_to 'Cancel', {controller: :admin, action: :edit_survey}, class: 'btn btn-primary' %>
 
 			<% end -%>
 	  </div>
-
-		<div class="row">
-			<div class="col-md-10">
-	  		<div class="panel panel-gray panel-body">
-	  			<ul>
-	  				<li>If question is in a category, the question can only be moved before or after questions in its own category.</li>
-	  				<li>Question must be in a category if attempting to reorder it between two quesitons in the same category.</li>
-	  				<li>Parent question must be before the current question.</li>
-	  				<li>If question is a parent of another question or category, it cannot be moved below one of those items.</li>
-	  			</ul>
-	  		</div>
-	  	</div>
-		</div>
 
 	</div>
 </div>

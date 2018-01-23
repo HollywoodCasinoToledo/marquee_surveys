@@ -45,7 +45,7 @@ class QuestionsController < ApplicationController
 		else
 			@possible_moves = Question.where.not(id: @question.id).where(category_id: @question.category_id).to_a.map.with_index { |q, i| [q.position.to_s + ". " + q.title, q.id] }
 		end
-		@possible_moves.push(['Move to end', 'move_to_end'])
+		@possible_moves.push(['Move to end', 'move_to_end']) if @question.category_id.nil?
 	end
 
 	def new
@@ -58,7 +58,7 @@ class QuestionsController < ApplicationController
 		@ordered_array = Array.new
 		@question = Question.find(params[:id])
 		@questions = Question.all.map(&:category_id).map! { |x| x.nil? ? 0 : x }.chunk{|n| n}.map(&:first)
-		uncategorized_questions = Question.where(survey_id: 1, category_id: nil).map(&:title)
+		uncategorized_questions = Question.where(survey_id: 1).map(&:title)
 		@questions.each do |x| 
 			if x == 0
 				@ordered_array.push(uncategorized_questions.shift)
@@ -66,8 +66,7 @@ class QuestionsController < ApplicationController
 				@ordered_array.push({Category.find(x).name => Question.where(category_id: x).map(&:title)})
 			end
 		end
-		@question = Question.find(params[:id])
-		@parent_hash = Answer.as_select_hash(1)
+		@parent_hash = @question.get_possible_parents
 	end
 
 	def update
@@ -81,15 +80,16 @@ class QuestionsController < ApplicationController
 			when "move_to_end"
 				question.place_at_end_of_survey
 			when "parent"
-				question.update_attribute(:parent_id, params[:question][:parent])
+				question.update_attribute(:parent, params[:question][:parent].blank? ? nil : params[:question][:parent])
 			else
 				question.assign_position
 			end
+		flash[:title] = "Success"
+		flash[:notice] = "Question updated"
 		rescue Exceptions::QuestionOrderError => error
 			flash[:title] = "Error"
 			flash[:notice] = error.message
 		end
-		
 		redirect_to controller: :questions, action: :edit, id: params[:id]
 	end
 

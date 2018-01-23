@@ -3,11 +3,12 @@ class Category < ActiveRecord::Base
 	has_many :questions
 
 	def find_tail
-		qs = Question.where(category_id: self.id).to_a.map!{ |q| [q.id, q.next_id] }
-		tail = qs[0][1]
-		qs = qs.to_h
-		while !qs[tail].blank?
-			tail = qs[tail] 
+		questions = Question.where(category_id: self.id).to_a.map!{ |q| [q.id, q.next_id] }
+		
+		tail = questions[0][1]
+		questions = questions.to_h
+		while !questions[tail].blank?
+			tail = questions[tail] 
 		end
 		tail
 	end

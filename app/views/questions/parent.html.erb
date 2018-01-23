@@ -29,64 +29,41 @@
   <!-- START CONTENT FRAME BODY -->
   <div class="content-frame-body">
               
-		<h2><span class="fa fa-pencil"></span> Edit Question: Move</h2>
-
-		<div class="row">
-			<div class="col-md-6">
-	  		<div class="panel panel-gray panel-body">	
-	  		<%= @question.title %>
-	  		</div>
-	  	</div>
-	  </div>
-
-		<div class="row">
+		<h2><span class="fa fa-sitemap"></span> Select Parent: <%= @question.title %></h2>
+				<% if !@question.parent.nil? 
+					parent_question = Question.find(Answer.find(@question.parent).question_id) %>
+					<div class="btn-group btn-group-lg push-down-15">
+					  <div class="btn btn-primary"><%= parent_question.position.to_s + ". " + parent_question.title %></div>
+	          <div class="btn btn-primary"><span class="fa fa-check-square"></span> <%= Answer.find(@question.parent).title %></div>
+			  		<div class="btn btn-default"><span class="fa fa-arrow-right"></span></div>
+			  		<div class="btn btn-primary"><%= @question.position.to_s + ". " + @question.title %></div>                                        
+	        </div>
+				<% else %>
+					<div class="panel panel-gray panel-body">
+						No current parent.
+					</div>
+	      <% end %>
+	      
 			<div class="col-md-6">
 	  		<div class="panel panel-body">
 	  			<%= form_for :question, :url => {:controller => :questions, action: :update}, method: :patch do |f| %>
-	  			<%= f.hidden_field :operation, value: "move" %>
+	  			<%= f.hidden_field :operation, value: "parent" %>
 
 	        <div class="form-group">
-	          <p><label for="poll">Parent Answer: (must select answer to access this question)</label><br></p>
+	          <p><label for="poll">New Parent Answer:</label><br></p>
 	          <b><p id="required_question"></p></b>
-	          <p><%= f.select :parent, grouped_options_for_select(@question.get_possible_parents.to_a), {include_blank: 'Any'},{class: 'form-control y-500'} %></p>
+	          <p><%= f.select :parent, grouped_options_for_select(@question.get_possible_parents.to_a), {include_blank: 'None'},{class: 'form-control y-500'} %></p>
 	        </div>
 
-	        <p> Selecting a question that belongs to a category will not move the question into that category.</p>
+	        <p></p>
 
-	        <%= f.submit 'Move', class: 'btn btn-primary' %>
+	        <%= f.submit 'Select', class: 'btn btn-primary' %>
 	        
-					<%= link_to 'Cancel', {controller: :admin, action: :edit_survey}, class: 'btn btn-primary' %>
+					<%= link_to 'Back', {controller: :questions, action: :edit, id: @question.id}, class: 'btn btn-primary' %>
 
-				<% end -%>
+				<% end -%> 
 	  		</div>
 	  	</div>
-		</div>
 
-		<div class="row">
-			<div class="col-md-6">
-	  		<div class="panel panel-gray panel-body">
-	  			<div class="dd" id="nestable">
-	  				<ol class="dd-list">
-	  					<% @ordered_array.each do |o| %>
-	  						<% if o.is_a?(Hash) %>
-		  						<li class="dd-item" data-id="1">
-			  						<div class="dd-handle category"><%= o.first[0] %></div>
-			  					</li>
-			  					<ol class="dd-list" style="">
-			  						<% o[o.first[0]].each do |q| %>
-			  							<li class="dd-item" data-id="3"><div class="dd-handle"><%= q %></div></li>
-			  						<% end %>
-			  					</ol>
-			  				<% else %>
-			  					<li class="dd-item" data-id="1">
-			  						<div class="dd-handle"><%= o %></div>
-			  					</li>
-			  				<% end %>
-		  				<% end %>
-	  				</ol>
-        	</div>
-	  		</div>
-	  	</div>
-		</div>
 	</div>
 </div>

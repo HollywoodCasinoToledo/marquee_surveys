@@ -43,23 +43,37 @@ class Question < ActiveRecord::Base
 	end
 
 	def has_parent_order_conflicts?(question)
-		valid = true
-		parent = Question.find(self.parent_id) if !self.parent_id.nil?
-		children = Question.where(parent_id: self.id).order(:position)
-		valid = false if question.position <= parent.position 
-		valid = false if !children.nil? && (children.last.position <= question.position)
+		conflicts = false
+		if !self.parent.nil?
+			parent = Answer.find(self.parent)
+			parent_question = Question.find(parent.question_id)
+			conflicts = parent_question.position > question.position
+		else
+			answers = Answer.where(question_id: self.id).map(&:id)
+			children = Question.where(parent: answers)
+			if !children.blank?
+				children.map(&:position).each do |p|
+					conflicts = true if p >= question.position
+				end
+			end
+		end
+		conflicts
 	end
 
 	def reorder_before(question)
-		old_pos = self.position
-		new_pos = question.position
-		if old_pos < new_pos
-			Question.where('position < ? AND position > ?', new_pos, old_pos).update_all("position = position - 1")
-			self.update_attribute(:position, new_pos - 1)
+		if !self.has_parent_order_conflicts?(question)
+			old_pos = self.position
+			new_pos = question.position
+			if old_pos < new_pos
+				Question.where('position < ? AND position > ?', new_pos, old_pos).update_all("position = position - 1")
+				self.update_attribute(:position, new_pos - 1)
+			else
+			 	Question.where('position >= ? AND position < ?', new_pos, old_pos).update_all("position = position + 1")
+			 	self.update_attribute(:position, new_pos)
+			end
 		else
-		 	Question.where('position >= ? AND position < ?', new_pos, old_pos).update_all("position = position + 1")
-		 	self.update_attribute(:position, new_pos)
-		end 
+			raise Exceptions::QuestionOrderError.new("Cannot move a question above it's own parent.")
+		end
 	end
 
 	def place_at_end_of_category
@@ -83,22 +97,26 @@ class Question < ActiveRecord::Base
 	end
 
 	def place_at_end_of_survey
+		old_pos = self.position
 		last_question = Question.where(survey_id: 1).order(:position).last
 		if !last_question.nil? && !last_question.position.nil?
-			self.update_attribute(:position, last_question.position + 1)
+			Question.where('position <= ? AND position > ?', last_question.position, old_pos).update_all("position = position - 1")
+			self.update_attribute(:position, last_question.position)
 		else
 			self.update_attribute(:position, 1)
 		end
 	end
 
 	def move_to_end_of_survey
-		last_question = Question.where(survey_id: 1).order(:position).last
-		old_position = self.position
-		if !last_question.nil? && !last_question.position.nil?
-			self.update_attribute(:position, last_question.position + 1)
-			Question.where('position > ?', old_position).update_all("position = position - 1")
-		else
-			self.update_attribute(:position, 1)
+		if question.has_parent_order_conflicts?
+			last_question = Question.where(survey_id: 1).order(:position).last
+			old_position = self.position
+			if !last_question.nil? && !last_question.position.nil?
+				self.update_attribute(:position, last_question.position + 1)
+				Question.where('position > ?', old_position).update_all("position = position - 1")
+			else
+				self.update_attribute(:position, 1)
+			end
 		end
 	end
 
