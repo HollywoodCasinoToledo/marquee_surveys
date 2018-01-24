@@ -4,9 +4,16 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   def include_navigation_pane_variables
-		@nav_categories = Category.where(survey_id: 1).to_a.map(&:id)
-		@nav_questions = Question.order(:position)
-		@nav_category_starts = Question.where.not(category_id: nil).order(position: :asc).group(:category_id).map(&:id)
+		@navigation_data = Array.new
+		questions = Question.order(:position).map(&:category_id).map! { |x| x.nil? ? 0 : x }.chunk{|n| n}.map(&:first)
+		uncategorized_questions = Question.where(survey_id: 1, category_id: nil).map(&:id)
+		questions.each do |x| 
+			if x == 0
+				@navigation_data.push(uncategorized_questions.shift)
+			else
+				@navigation_data.push({Category.find(x).name => Question.where(category_id: x).map(&:id)})
+			end
+		end
   end
 
 end

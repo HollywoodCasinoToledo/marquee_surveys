@@ -119,16 +119,16 @@ $(document).ready ->
   )
 
   $('.question').on('click', ->
-    $('.list-group-item.answer[data-question=' + $(this).data("id") + ']').toggleClass("hidden")
+    $('.dd-handle.answer[data-question=' + $(this).data("id") + ']').parent().toggleClass("hidden")
     return
   )
 
-  $('.list-group-item').on('mouseover', ->
+  $('.dd-item').on('mouseover', ->
     $(this).find(".list-group-controls").removeClass('hidden')
     return
   )
 
-  $('.list-group-item').on('mouseout', ->
+  $('.dd-item').on('mouseout', ->
     $(this).find(".list-group-controls").addClass('hidden')
     return
   )

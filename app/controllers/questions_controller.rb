@@ -55,17 +55,7 @@ class QuestionsController < ApplicationController
 	end
 
 	def parent
-		@ordered_array = Array.new
 		@question = Question.find(params[:id])
-		@questions = Question.order(:position).map(&:category_id).map! { |x| x.nil? ? 0 : x }.chunk{|n| n}.map(&:first)
-		uncategorized_questions = Question.where(survey_id: 1, category_id: nil).map(&:title)
-		@questions.each do |x| 
-			if x == 0
-				@ordered_array.push(uncategorized_questions.shift)
-			else
-				@ordered_array.push({Category.find(x).name => Question.where(category_id: x).map(&:title)})
-			end
-		end
 		@parent_hash = @question.get_possible_parents
 	end
 

@@ -2392,10 +2392,13 @@ body {
 }
 .page-container .page-content .content-frame .content-frame-left {
   float: left;
-  width: 300px;
+  width: 350px;
   min-height: 100%;
-  background: rgba(0, 0, 0, 0.02);
-  border-right: 1px solid #DDD;
+  padding: 5px 8px;
+  margin: 17px 15px;
+  background: rgb(234, 233, 233);
+  border: 1px solid #d6d6d6;
+  border-radius: 5px;
 }
 .page-container .page-content .content-frame .content-frame-left.padding-0 {
   padding: 0px;
@@ -2435,7 +2438,7 @@ body {
 }
 .page-container .page-content .content-frame .content-frame-body {
   padding: 75px 10px 10px 15px;
-  margin-left: 300px;
+  margin-left: 370px;
 }
 .page-container .page-content .content-frame .content-frame-body-full {
   padding: 75px 10px 10px 15px;
@@ -8832,7 +8835,7 @@ body.sidebar-opened .sidebar {
   list-style: none;
 }
 .dd-list .dd-list {
-  padding-left: 30px;
+  padding-left: 20px;
 }
 .dd-collapsed .dd-list {
   display: none;
@@ -8866,6 +8869,7 @@ body.sidebar-opened .sidebar {
 .dd-handle:hover {
   color: #434a54;
   background: #fff;
+  cursor: pointer;
 }
 .dd-item > button {
   display: block;
@@ -8904,6 +8908,9 @@ body.sidebar-opened .sidebar {
     margin-bottom: 0px;
     line-height: 30px;
     text-align: center;
+}
+.dd-handle.answer {
+    background-color: #e3e3e3;
 }
 .dd-placeholder,
 .dd-empty {
