@@ -30,6 +30,7 @@
   <div class="content-frame-body">
               
 		<h2><span class="fa fa-sitemap"></span> Select Parent: <%= @question.title %></h2>
+			<div class="col-md-6">
 				<% if !@question.parent.nil? 
 					parent_question = Question.find(Answer.find(@question.parent).question_id) %>
 					<div class="btn-group btn-group-lg push-down-15">
@@ -38,13 +39,11 @@
 			  		<div class="btn btn-default"><span class="fa fa-arrow-right"></span></div>
 			  		<div class="btn btn-primary"><%= @question.position.to_s + ". " + @question.title %></div>                                        
 	        </div>
-				<% else %>
-					<div class="panel panel-gray panel-body">
-						No current parent.
-					</div>
-	      <% end %>
-	      
-			<div class="col-md-6">
+	       <% else %>
+	       <div class="panel panel-gray panel-body">
+       		No current parent.
+	       </div>
+        <% end %>
 	  		<div class="panel panel-body">
 	  			<%= form_for :question, :url => {:controller => :questions, action: :update}, method: :patch do |f| %>
 	  			<%= f.hidden_field :operation, value: "parent" %>
@@ -62,6 +61,29 @@
 					<%= link_to 'Back', {controller: :questions, action: :edit, id: @question.id}, class: 'btn btn-primary' %>
 
 				<% end -%> 
+	  		</div>
+
+	  		<div class="panel panel-gray panel-body">
+	  			<div class="dd" id="nestable">
+	  				<ol class="dd-list">
+	  					<% @ordered_array.each do |o| %>
+	  						<% if o.is_a?(Hash) %>
+		  						<li class="dd-item" data-id="1">
+			  						<div class="dd-handle category"><%= o.first[0] %></div>
+			  					</li>
+			  					<ol class="dd-list" style="">
+			  						<% o[o.first[0]].each do |q| %>
+			  							<li class="dd-item" data-id="3"><div class="dd-handle"><%= q %></div></li>
+			  						<% end %>
+			  					</ol>
+			  				<% else %>
+			  					<li class="dd-item" data-id="1">
+			  						<div class="dd-handle"><%= o %></div>
+			  					</li>
+			  				<% end %>
+		  				<% end %>
+	  				</ol>
+        	</div>
 	  		</div>
 	  	</div>
 

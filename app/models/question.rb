@@ -30,8 +30,12 @@ class Question < ActiveRecord::Base
 	end
 
 	def assign_position
-		if self.category_id.nil? || @nav_questions.blank?
-			self.place_at_end_of_survey
+		if self.category_id.nil? || Question.all.nil?
+			if self.position.nil?
+				self.place_at_end_of_survey
+			else
+				self.move_to_end_of_survey
+			end
 		else
 			self.place_at_end_of_category
 		end
@@ -77,26 +81,33 @@ class Question < ActiveRecord::Base
 	end
 
 	def place_at_end_of_category
-		last_question = Question.where(category_id: self.category_id).order(:position).last
+		last_question = Question.where.not(id: self.id).where(category_id: self.category_id).order(:position).last
 		if !last_question.nil? && !last_question.position.nil?
-			self.reorder_before(Question.find_by(position: last_question.position + 1))
+			below_question = Question.find_by(position: last_question.position + 1)
+			if below_question.nil?
+				if self.position.nil?
+					self.place_at_end_of_survey 
+				else
+					self.move_to_end_of_survey
+				end
+			else
+				self.reorder_before(last_question)
+			end
 		else
-			self.update_attribute(:position, 1)
-		end
-	end
-
-	def move_to_end_of_category
-		last_question = Question.where(survey_id: 1).order(:position).last
-		old_position = self.position
-		if !last_question.nil? && !last_question.position.nil?
-			Question.where('position > ?', old_position).update_all("position = position - 1")
-			self.reorder_before(Question.find_by(position: last_question.position + 1))
-		else
-			self.update_attribute(:position, 1)
+			self.place_at_end_of_survey
 		end
 	end
 
 	def place_at_end_of_survey
+		last_question = Question.where(survey_id: 1).order(:position).last
+		if !last_question.nil? && !last_question.position.nil?
+			self.update_attribute(:position, last_question.position + 1)
+		else
+			self.update_attribute(:position, 1)
+		end
+	end
+
+	def move_to_end_of_survey
 		old_pos = self.position
 		last_question = Question.where(survey_id: 1).order(:position).last
 		if !last_question.nil? && !last_question.position.nil?
@@ -104,19 +115,6 @@ class Question < ActiveRecord::Base
 			self.update_attribute(:position, last_question.position)
 		else
 			self.update_attribute(:position, 1)
-		end
-	end
-
-	def move_to_end_of_survey
-		if question.has_parent_order_conflicts?
-			last_question = Question.where(survey_id: 1).order(:position).last
-			old_position = self.position
-			if !last_question.nil? && !last_question.position.nil?
-				self.update_attribute(:position, last_question.position + 1)
-				Question.where('position > ?', old_position).update_all("position = position - 1")
-			else
-				self.update_attribute(:position, 1)
-			end
 		end
 	end
 

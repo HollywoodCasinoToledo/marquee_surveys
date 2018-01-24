@@ -1,4 +1,4 @@
-<% content_for :title, "Control Panel" %>
+<% content_for :title, "New Question" %>
 
 <!-- START BREADCRUMB -->
 <ul class="breadcrumb">
@@ -69,23 +69,10 @@
             <p class="tiny-note">Multi-voting will only apply to list and grid questions. IMPORTANT: Cannot change this after creating the question.</p>
           </label></p>
 
-          <div class="row">
-				    <div class="col-md-10">
-				      <div class="panel panel-gray panel-body">
-				      
-				        <div class="form-group">
-				          <p><label for="poll">Parent Answer: (must select answer to access this question)</label><br></p>
-				          <b><p id="required_question"></p></b>
-				          <p><%= f.select :parent, grouped_options_for_select(@parent_hash.to_a), {include_blank: 'Any'},{class: 'form-control y-500'} %></p>
-				        </div>
-				      </div>
-				  	</div>
-				  </div>
-
           <%= f.submit 'Create', class: 'btn btn-primary' %>
 					<%= link_to 'Cancel', {controller: :admin, action: :control_panel}, class: 'btn btn-primary' %>
 
-  	<% end -%>
+  		<% end -%>
     </div>
     <!-- END CONTENT FRAME BODY -->
 </div>

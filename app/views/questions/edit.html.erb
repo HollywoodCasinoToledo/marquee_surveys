@@ -49,7 +49,7 @@
 
         <p><label for = "prize_image">Question Type</label>:<br>
 
-        <%= f.hidden_field :style, value: Question::STYLE_LIST, id: 'style' %></p>
+        <%= f.hidden_field :style, id: 'style' %></p>
         <div class="btn-group">
           <div id="<%= Question::STYLE_LIST %>" class="btn btn-default btn-primary question_style_button"><span class="fa fa-bars"></span></div>
           <div id="<%= Question::STYLE_GRID %>" class="btn btn-default question_style_button"><span class="fa fa-th-large"></span></div> 
