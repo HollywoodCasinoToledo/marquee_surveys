@@ -59,6 +59,10 @@ class QuestionsController < ApplicationController
 		@parent_hash = @question.get_possible_parents
 	end
 
+	def show
+
+	end
+
 	def update
 		question = Question.find(params[:id])
 		category_id = question.category_id
