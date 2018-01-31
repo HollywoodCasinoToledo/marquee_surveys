@@ -91,7 +91,8 @@ class Question < ActiveRecord::Base
 					self.move_to_end_of_survey
 				end
 			else
-				self.reorder_before(last_question)
+				self.place_at_end_of_survey
+				self.reorder_before(below_question)
 			end
 		else
 			self.place_at_end_of_survey
@@ -130,7 +131,9 @@ class Question < ActiveRecord::Base
 		return true
 	end
 
-
+	def is_groupable
+		self.style == Question::STYLE_RATE_3 || self.style == Question::STYLE_RATE_5 || self.style == Question::STYLE_BOOL
+	end
 
 	def get_possible_parents
 		@selection_hash = Hash.new

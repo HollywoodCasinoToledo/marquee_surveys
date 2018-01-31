@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180118152111) do
+ActiveRecord::Schema.define(version: 20180129154643) do
 
   create_table "admins", force: :cascade do |t|
     t.integer  "property_id",     limit: 4, null: false
@@ -71,6 +71,7 @@ ActiveRecord::Schema.define(version: 20180118152111) do
     t.integer  "category_id", limit: 4
     t.integer  "next_id",     limit: 4
     t.integer  "position",    limit: 4
+    t.boolean  "active",                  default: true
   end
 
   create_table "responses", force: :cascade do |t|

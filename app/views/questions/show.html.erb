@@ -1,0 +1,66 @@
+<% content_for :title, "Question #{@question.id}" %>
+
+<!-- START TITLE -->
+<div class="page-title">                    
+  <%= image_tag "Marquee-Logo.png" %>
+</div>
+<!-- END TITLE -->
+
+<div class="page-container">
+
+	<% if !@category.nil? %>
+		<div class="survey-group-name">
+			<%= @category.name %>
+		</div>
+	<% end %>
+
+	<%= form_tag( {controller: :responses, action: :create}, {method: :post}) do %>
+	<%= hidden_field_tag :previous_question, params[:previous_question] %>
+	<%= hidden_field_tag :next_question, params[:next_question] %>
+	<% if @question_group.nil? 
+			@ques = @question %>
+
+		<center><h1 id="question"><%= @question.title %></h1></center>
+
+		<% case @question.style %>
+			<% when Question::STYLE_BOOL %>
+			<%= render 'answers/style_bool' %>
+			<% when Question::STYLE_RATE_3 %>
+			<%= render 'answers/style_rate_3' %>
+			<% when Question::STYLE_RATE_5 %>
+			<%= render 'answers/style_rate_5' %>
+			<% when Question::STYLE_LIST %>
+			<%= render 'answers/style_list' %>
+			<% when Question::STYLE_GRID %>
+			<%= render 'answers/style_grid' %>
+			<% when Question::STYLE_CMNT %>
+			<%= render 'answers/style_comment' %>
+			<% else %>
+			<%= render 'answers/style_rate_3_group' %>
+		<% end %>
+
+	<% else %>
+
+		<% @question_group.each do |q| 
+			@ques = q %>
+			<% case q.style %>
+				<% when Question::STYLE_RATE_3 %>
+				<%= render 'answers/style_rate_3_group' %>
+				<% when Question::STYLE_RATE_5 %>
+				<%= render 'answers/style_rate_5_group' %>
+				<% else %>
+				<%= render 'answers/style_rate_3_group' %>
+			<% end %>
+		<% end %>
+
+	<% end %>
+
+</div>
+
+<div class="page-controls">
+
+	<%= render 'surveys/layout_survey_controls' %>
+
+</div>
+
+<% end %>

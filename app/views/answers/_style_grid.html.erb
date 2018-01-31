@@ -1,0 +1,10 @@
+
+<div class="grid">
+	<% 6.times do %>
+	<div class="grid-option <%#= @question.multiple ? 'multiple_answers' : 'single_answer' %>" data-answer_id="<%#= a.id %>">
+		<%= image_tag 'pupperderp.jpg', class: "img-thumbnail-150"%>
+		<p class="img-title">Option</p>
+		<%#= f.check_box a.id, value: nil, class: 'hidden'  %>
+	</div>
+	<% end %>
+</div>

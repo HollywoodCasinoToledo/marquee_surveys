@@ -6,6 +6,10 @@ Rails.application.routes.draw do
   # root 'welcome#index'
    root 'patrons#home'
 
+   get 'questions/:id'													=> 'questions#show'
+
+   post 'responses'															=> 'responses#create'
+
    get 'admin'																	=> 'admin#control_panel'
    get 'admin/survey'														=> 'admin#edit_survey'
 

@@ -1,6 +1,6 @@
 class QuestionsController < ApplicationController
 
-	layout 'application_admin'
+	layout :decide_layout
 
 	before_action :include_navigation_pane_variables, only: [:edit, :new, :move, :parent]
 
@@ -31,7 +31,7 @@ class QuestionsController < ApplicationController
 		@ordered_array = Array.new
 		@question = Question.find(params[:id])
 		@questions = Question.all.map(&:category_id).map! { |x| x.nil? ? 0 : x }.chunk{|n| n}.map(&:first)
-		uncategorized_questions = Question.where(survey_id: 1, category_id: nil).map(&:title)
+		uncategorized_questions = Question.where(active: true, category_id: nil).map(&:title)
 		@questions.each do |x| 
 			if x == 0
 				@ordered_array.push(uncategorized_questions.shift)
@@ -60,7 +60,35 @@ class QuestionsController < ApplicationController
 	end
 
 	def show
+		@question = Question.find(params[:id])
+		@questions = Question.where(active: true).order(:position)
+		if @question.category_id.nil?
+			@answers = Answer.where(question_id: @question.id)
+			@next_question = Question.find_by(active: true, position: @question.position + 1)
+		else
+			@category = Category.find(@question.category_id) 
+			@question_group = @questions.where(category_id: @category.id, style: [Question::STYLE_RATE_3, Question::STYLE_RATE_5]) if @question.is_groupable
+			if @question_group.nil?
+				@next_question = Question.find_by(active: true, position: @question.position + 1)
+			else
+				@next_question = Question.find_by(active: true, position: @question_group.last.position + 1)
+			end
+			
+		end
+		
+		
+		@first_question = Question.find_by(active: true, position: 1) if @next_question.nil?
+		@parents = params[:parents].to_a
+		@selected_answers = params[:selected_answers]
 
+		#@voted_q = @questions.joins(:votes).where('votes.employee_id = ?', @current_user.IDnum).map(&:id) #Questions voted on
+		#@voted_a_all_ids = Vote.where(employee_id: @current_user.IDnum).joins(:question).where('questions.poll_id = ?', @poll.id).group(:answer_id).map(&:answer_id)
+		#@voted_a = Vote.where(employee_id: @current_user.IDnum, question_id: @question.id)
+		#@voted_a_ids = @voted_a.map(&:answer_id).to_a
+		#@voted_a_titles = @voted_a.map(&:map_voted_titles_in_string).to_a
+		#@commented = @questions.joins(:comments).where('comments.employee_id = ?', @current_user.IDnum).map(&:id)
+		#@comment = Comment.find_by(employee_id: @current_user.IDnum, question_id: @question.id) if @question.style == Question::STYLE_CMNT
+		#@parents = Question.where.not(parent: nil).group(:parent).map(&:id)
 	end
 
 	def update
@@ -89,7 +117,11 @@ class QuestionsController < ApplicationController
 
 	private 
 		def question_params
-			params.require(:question).permit(:survey_id, :title, :style, :required, :category_id)
+			params.require(:question).permit(:survey_id, :title, :style, :required, :category_id, :multiple)
 		end
+
+	def decide_layout
+		['new', 'edit', 'move', 'parent'].include?(action_name) ? 'application_admin' : 'application_main'
+	end
 
 end

@@ -1,0 +1,20 @@
+<div class="row">
+  <div class="survey-group">
+		<div class="col-md-3">
+	  	<div class="question">
+	    		<%= @ques.title %>
+			</div>
+	  </div>
+
+	  <% Answer.where(question_id: @ques.id).each do |a| %>
+		  <div class="col-md-2 col-5th">
+		  	<div class="options-button <%= @question.multiple ? 'multiple_answers' : 'single_answer' %> tr-clickable <%= 'selected' if session[:id] && @selected_answers.include?(a.id) %>" data-answer_id="<%= a.id %>" data-question_id="<%= @ques.id %>">
+		  	  <%= a.title %>
+		  	  <%= check_box_tag a.id, nil, false, class: 'hidden' %>
+				</div>
+				
+		  </div>
+	  <% end %>
+
+  </div>
+</div>

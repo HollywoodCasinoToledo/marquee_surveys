@@ -2319,6 +2319,9 @@ body {
   padding-left: 0px;
   padding-right: 0px;
 }
+.col-5th {
+ width: 15%;
+}
 /* PAGE CONTAINER */
 .page-container {
 	width: 60%;
@@ -3740,14 +3743,6 @@ body.page-container-boxed.wall_10 {
   background: transparent;
   padding: 5px 10px;
 }
-.list-group .list-group-item:first-child {
-  border-top: 0px;
-  border-radius: 0px;
-}
-.list-group.border-bottom .list-group-item:last-child {
-  border-bottom: 1px solid #E5E5E5;
-  border-radius: 0px;
-}
 .list-group.list-group-navigation {
   border: 0px;
   float: left;
@@ -3828,12 +3823,10 @@ a div span {
   border-bottom-right-radius: 4px;
 }
 .list-group-contacts .list-group-item.selected {
-  background: #ef5350;
-  border-color: #ef5350;
+	background-color: #00000094;
   color: #ffffff;
 	margin-right: -4px;
   margin-left: -4px;
-  border-radius: 4px;
   z-index: 4;
 }
 .list-group-contacts .list-group-item.selected-border {
@@ -11971,7 +11964,7 @@ p.sub-note {
 
 .options-button {
   padding: 37px;
-  background-color: #0000004a;
+  background-color: #00000030;
   border-radius: 5px;
   text-align: center;
   color: #fff8c6;
@@ -11986,7 +11979,10 @@ p.sub-note {
   cursor: pointer;
 }
 .options-button.selected {
-	color: #00000094;
+	background-color: #00000094;
+  color: #ffffff;
+	margin: -1px -4px;
+  z-index: 4;
 }
 
 .survey-group-name {

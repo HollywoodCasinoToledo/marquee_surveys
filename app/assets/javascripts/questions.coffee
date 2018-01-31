@@ -16,47 +16,14 @@ $(document).ready ->
     $('#style').val($(this).attr('id'))
     return
 
-  $('#star_rankings div').on('mouseover', ->
-    onStar = parseInt($(this).children('div.star-ranks').data('rate'), 10)
-    $('#star_rankings div').children('div.star-ranks').each (e) ->
-      e = $(this).data('rate')
-      if e <= onStar
-        $(this).addClass 'selected'
-      else
-        $(this).removeClass 'selected'
-      return
-    return
-  ).on('click', ->
-    $(this).parent().children('div.star-ranks').each (e) ->
-      $('#answer_id').val($(this).data('answer_id'))
-      $('#answer_rate').val($(this).data('rate'))
-      return
-    return
-  ).on('mouseout', ->
-    $('#star_rankings div').children('div.star-ranks').each (e) ->
-      selectedStar = $('#answer_rate').val()
-      if e < selectedStar
-        $(this).addClass 'selected'
-      else
-        $(this).removeClass 'selected'
-      return
-    return
-  )
-
-  $('.star-ranks').on('click', ->
-    checked = $(this).parent().find("input")
-    $('.star-rank-holder').find('input').val(0)
-    checked.val(1)
-    return
-  )
-
   $('.single_answer').on('click', ->
     checked = $(this).find("input")
-    $('.single_answer').find("input").val(0)
+    question = $(this).data("question_id")
+    $("[data-question_id=" + question + "]").find("input").val(0)
+    $("[data-question_id=" + question + "]").find("input").prop('checked', false)
+    $("[data-question_id=" + question + "]").removeClass 'selected'
     checked.val(1)
-    $('.single_answer').each (e) ->
-      $(this).removeClass 'selected'
-      return
+    checked.prop('checked', true)
     $(this).addClass 'selected'
     return
   )
@@ -72,10 +39,13 @@ $(document).ready ->
    
   $('.multiple_answers').on('click', ->
     checked = $(this).find("input")
+    question = $(this).data("question_id")
     if checked.val() == '1'
       checked.val(0)
+      checked.prop('checked', false)
     else
       checked.val(1)
+      checked.prop('checked', true)
     $(this).toggleClass 'selected'
     return
   )

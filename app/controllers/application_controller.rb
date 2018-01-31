@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
 
   def include_navigation_pane_variables
 		@navigation_data = Array.new
-		questions = Question.order(:position).map(&:category_id).map! { |x| x.nil? ? 0 : x }.chunk{|n| n}.map(&:first)
+		questions = Question.where(active: true).order(:position).map(&:category_id).map! { |x| x.nil? ? 0 : x }.chunk{|n| n}.map(&:first)
 		uncategorized_questions = Question.where(survey_id: 1, category_id: nil).map(&:id)
 		questions.each do |x| 
 			if x == 0

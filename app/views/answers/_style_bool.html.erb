@@ -1,0 +1,11 @@
+<div class="row">
+	<% Answer.where(question_id: @ques.id).each do |a| %>
+	  <div class="col-md-6">
+	  	<div class="options-button single_answer tr-clickable <%= 'selected' if session[:id] && @selected_answers.include?(a.id) %>" data-answer_id="<%= a.id %>" data-question_id="<%= @ques.id %>">
+	  	  <%= a.title %>
+	  	  <%= check_box_tag 'answers[%s]' % [a.id], nil, false, class: 'hidden' %>
+			</div>
+			
+	  </div>
+  <% end %>
+</div>
