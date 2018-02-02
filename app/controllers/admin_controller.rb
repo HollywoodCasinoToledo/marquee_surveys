@@ -10,9 +10,9 @@ class AdminController < ApplicationController
 		include_navigation_pane_variables
 		
 		@categories = Category.where(survey_id: 1).to_a.map(&:id)
-		@test = Question.all.to_a.map!{ |q| [q.id, q.next_id] }
+		@qs = Question.where(active: true).order(:position).to_a.map!{ |q| [q.id, q.next_id] }
 		@orderized = Array.new
-		data = @test.to_h.invert
+		data = @qs.to_h.invert
 		current = data[nil]
 		@orderized.push(current)
 		begin

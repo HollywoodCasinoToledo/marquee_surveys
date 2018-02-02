@@ -14,11 +14,11 @@
 		</div>
 	<% end %>
 
-	<%= form_tag( {controller: :responses, action: :create}, {method: :post}) do %>
+	<%= form_tag({controller: :responses, action: :create}, {method: :post}) do %>
 	<%= hidden_field_tag :previous_question, params[:previous_question] %>
-	<%= hidden_field_tag :next_question, params[:next_question] %>
-	<% if @question_group.nil? 
-			@ques = @question %>
+	<%= hidden_field_tag :next_question, @next_question.id if !@next_question.nil?  %>
+	<%= hidden_field_tag :answered, params[:answered] %>
+	<% if @question_group.nil? || @question_group.count == 0 %>
 
 		<center><h1 id="question"><%= @question.title %></h1></center>
 
@@ -42,7 +42,7 @@
 	<% else %>
 
 		<% @question_group.each do |q| 
-			@ques = q %>
+			@question = q %>
 			<% case q.style %>
 				<% when Question::STYLE_RATE_3 %>
 				<%= render 'answers/style_rate_3_group' %>

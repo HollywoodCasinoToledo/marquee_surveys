@@ -1,32 +1,10 @@
 <div class="row">
-  <div class="col-md-2">
-  	<div class="options-button">
-    		1
-		</div>
-  </div>
-
-  <div class="col-md-2">
-  	<div class="options-button">
-  	  	2
-		</div>
-  </div>
-
-  <div class="col-md-2">
-  	<div class="options-button">
-  	  	3
-		</div>
-  </div>
-
-  <div class="col-md-2">
-  	<div class="options-button">
-  	  	4
-		</div>
-  </div>
-
-  <div class="col-md-2">
-  	<div class="options-button">
-  	  	5
-		</div>
-  </div>
-
+	<% Answer.where(question_id: @question.id).each do |a| %>
+	  <div class="col-md-2 col-5th">
+	  	<div class="options-button <%= @question.multiple ? 'multiple_answers' : 'single_answer' %> tr-clickable <%= 'selected' if session[:id] && @selected_answers.include?(a.id) %>" data-answer_id="<%= a.id %>" data-question_id="<%= @question.id %>">
+	  	  <%= a.title %>
+	  	  <%= check_box_tag 'answers[%s]' % [a.id], nil, false, class: 'hidden' %>
+			</div>
+	  </div>
+  <% end %>
 </div>

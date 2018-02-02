@@ -67,8 +67,10 @@ class QuestionsController < ApplicationController
 			@next_question = Question.find_by(active: true, position: @question.position + 1)
 		else
 			@category = Category.find(@question.category_id) 
-			@question_group = @questions.where(category_id: @category.id, style: [Question::STYLE_RATE_3, Question::STYLE_RATE_5]) if @question.is_groupable
-			if @question_group.nil?
+			groupable = Array.new
+			@questions.where(category_id: @category.id).where("position >= ?", @question.position).each { |q| q.is_groupable ? groupable.push(q.id) : break }
+			@question_group = @questions.find(groupable)
+			if @question_group.nil? || @question_group.count == 0
 				@next_question = Question.find_by(active: true, position: @question.position + 1)
 			else
 				@next_question = Question.find_by(active: true, position: @question_group.last.position + 1)
@@ -94,7 +96,6 @@ class QuestionsController < ApplicationController
 	def update
 		question = Question.find(params[:id])
 		category_id = question.category_id
-		question.update_attributes(question_params)
 		begin
 			case params[:question][:operation]
 			when "move"
@@ -104,7 +105,7 @@ class QuestionsController < ApplicationController
 			when "parent"
 				question.update_attribute(:parent, params[:question][:parent].blank? ? nil : params[:question][:parent])
 			else
-				question.assign_position
+				question.update_attributes(question_params)
 			end
 		flash[:title] = "Success"
 		flash[:notice] = "Question updated"

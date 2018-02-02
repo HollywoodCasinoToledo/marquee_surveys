@@ -3772,9 +3772,10 @@ a.list-group-item:focus {
 /* LIST GROUP CONTACTS */
 .list-group-contacts .list-group-item {
   padding: 15px;
-  background-color: #00000047;
+  background-color: #00000030;
   color: #fff8c6;
   border: 0px;
+  font-size: 15px;
   margin-top: 5px;
 }
 .list-group-contacts .list-group-item:hover {
@@ -3803,7 +3804,7 @@ a div span {
   margin-right: 10px;
 }
 .list-group-contacts .list-group-item .contacts-title {
-  font-size: 13px;
+  font-size: 17px;
   font-weight: 600;
   line-height: 20px;
 }
@@ -11940,6 +11941,7 @@ p.sub-note {
 	font-size: 15px;
 	font-weight: bold;
 	padding: 15px 60px;
+	border: 0px;
 	-webkit-transition: all 200ms ease;
 	-moz-transition: all 200ms ease;
 	-ms-transition: all 200ms ease;

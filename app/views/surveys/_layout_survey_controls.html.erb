@@ -3,9 +3,10 @@
   <span class="fa fa-arrow-left"></span> 
    Back
   </div>
-  <div class="page-control-btn control-btn-right">
-  	Next
-  	<span class="fa fa-arrow-right"></span> 
-  </div>
-  	<%= submit_tag "Next", class: "page-control-btn control-btn-right" %>
+  <% if !@next_question.nil? %>
+		<%= submit_tag "Next", class: "page-control-btn control-btn-right" %>
+  <% else %>
+  	<%= submit_tag "Finish", class: "page-control-btn control-btn-right" %>
+  <% end %>
+  
 </div>

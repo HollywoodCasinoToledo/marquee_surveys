@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
 			if x == 0
 				@navigation_data.push(uncategorized_questions.shift)
 			else
-				@navigation_data.push({Category.find(x).name => Question.where(category_id: x).map(&:id)})
+				@navigation_data.push({Category.find(x).name => Question.where(category_id: x).order(:position).map(&:id)})
 			end
 		end
   end

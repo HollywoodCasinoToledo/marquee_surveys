@@ -1,6 +1,6 @@
 <div class="list-group list-group-contacts"> 
-	<% Answer.where(question_id: @ques.id).each do |a| %>
-		<div class="list-group-item <%= @question.multiple ? 'multiple_answers' : 'single_answer' %> tr-clickable <%= 'selected' if session[:id] && @selected_answers.include?(a.id) %>" data-answer_id="<%= a.id %>" data-question_id="<%= @ques.id %>">
+	<% Answer.where(question_id: @question.id).each do |a| %>
+		<div class="list-group-item <%= @question.multiple ? 'multiple_answers' : 'single_answer' %> tr-clickable <%= 'selected' if session[:id] && @selected_answers.include?(a.id) %>" data-answer_id="<%= a.id %>" data-question_id="<%= @question.id %>">
 	    <span class="contacts-title"><%= a.title %></span>
 		  	<%= check_box_tag 'answers[%s]' % [a.id], nil, false, class: 'hidden' %>
 	  </div>

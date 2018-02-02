@@ -152,6 +152,19 @@ class Question < ActiveRecord::Base
 		return @selection_hash
 	end
 
-
+	def get_next_question(parents)
+		if Question.find_by(position: self.position + 1).nil?
+			return nil
+		else
+			loop do
+				q = Question.find_by(active: true, position: self.position + 1)
+				if q.parent.nil? 
+					break
+				else
+					break if parents.include?(q.parent.to_s)
+				end
+			end
+		end
+	end
 
 end
