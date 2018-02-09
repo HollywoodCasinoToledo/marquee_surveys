@@ -1,5 +1,7 @@
 <% content_for :title, "Question #{@question.id}" %>
 
+Instance ID:  <%= session[:instance_id] %>
+
 <!-- START TITLE -->
 <div class="page-title">                    
   <%= image_tag "Marquee-Logo.png" %>
@@ -14,10 +16,10 @@
 		</div>
 	<% end %>
 
-	<%= form_tag({controller: :responses, action: :create}, {method: :post}) do %>
-	<%= hidden_field_tag :previous_question, params[:previous_question] %>
+<%= form_tag({controller: :responses, action: :create}, {method: :post}) do %>
+	<%= hidden_field_tag :current_question, @question.id %>
 	<%= hidden_field_tag :next_question, @next_question.id if !@next_question.nil?  %>
-	<%= hidden_field_tag :answered, params[:answered] %>
+	<%= @selected_answers %>
 	<% if @question_group.nil? || @question_group.count == 0 %>
 
 		<center><h1 id="question"><%= @question.title %></h1></center>
@@ -56,7 +58,6 @@
 	<% end %>
 
 </div>
-
 <div class="page-controls">
 
 	<%= render 'surveys/layout_survey_controls' %>

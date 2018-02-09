@@ -61,6 +61,13 @@ class QuestionsController < ApplicationController
 
 	def show
 		@question = Question.find(params[:id])
+		if @question.position == 1
+	    loop do
+	      session[:instance_id] = SecureRandom.hex.slice(0..12)
+	      break unless Response.find_by(instance_id: session[:instance_id])
+	    end
+	  end
+
 		@questions = Question.where(active: true).order(:position)
 		if @question.category_id.nil?
 			@answers = Answer.where(question_id: @question.id)
@@ -75,13 +82,11 @@ class QuestionsController < ApplicationController
 			else
 				@next_question = Question.find_by(active: true, position: @question_group.last.position + 1)
 			end
-			
 		end
 		
-		
 		@first_question = Question.find_by(active: true, position: 1) if @next_question.nil?
-		@parents = params[:parents].to_a
-		@selected_answers = params[:selected_answers]
+		@previous_question_id = @question.get_previous_question_id if @question.position > 1
+		@selected_answers = Response.where(instance_id: session[:instance_id]).map(&:answer_id)
 
 		#@voted_q = @questions.joins(:votes).where('votes.employee_id = ?', @current_user.IDnum).map(&:id) #Questions voted on
 		#@voted_a_all_ids = Vote.where(employee_id: @current_user.IDnum).joins(:question).where('questions.poll_id = ?', @poll.id).group(:answer_id).map(&:answer_id)

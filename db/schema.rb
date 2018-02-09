@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180129154643) do
+ActiveRecord::Schema.define(version: 20180202231323) do
 
   create_table "admins", force: :cascade do |t|
     t.integer  "property_id",     limit: 4, null: false
@@ -77,9 +77,10 @@ ActiveRecord::Schema.define(version: 20180129154643) do
   create_table "responses", force: :cascade do |t|
     t.integer  "patron_id",   limit: 4
     t.integer  "question_id", limit: 4
-    t.integer  "answer_id",   limit: 4, null: false
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
+    t.integer  "answer_id",   limit: 4,   null: false
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+    t.string   "instance_id", limit: 255
   end
 
   create_table "surveys", force: :cascade do |t|

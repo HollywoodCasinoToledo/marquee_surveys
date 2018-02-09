@@ -131,8 +131,18 @@ class Question < ActiveRecord::Base
 		return true
 	end
 
+	def get_group
+
+	end
+
 	def is_groupable
 		self.style == Question::STYLE_RATE_3 || self.style == Question::STYLE_RATE_5 || self.style == Question::STYLE_BOOL
+	end
+
+	def get_first_in_display_group
+		groupable = Array.new
+		Question.where(category_id: self.category_id).where("position <= ?", self.position).order(position: :desc).map { |q| q.is_groupable ? groupable.push(q.id) : break }
+		groupable.pop
 	end
 
 	def get_possible_parents
@@ -158,13 +168,26 @@ class Question < ActiveRecord::Base
 		else
 			loop do
 				q = Question.find_by(active: true, position: self.position + 1)
-				if q.parent.nil? 
+				if q.parent.nil?
 					break
 				else
 					break if parents.include?(q.parent.to_s)
 				end
 			end
+			return q
 		end
+	end
+
+	def get_previous_question_id
+		question = Question.find_by(position: self.position - 1)
+
+	  if !question.category_id.nil?
+	  	groupable = Array.new
+	  	Question.where(active: true).where(category_id: question.category_id).where("position <= ?", question.position).order(position: :desc).each { |q| q.is_groupable ? groupable.push(q.id) : break }
+	  	return groupable.last
+	  else
+	  	question.id
+	  end
 	end
 
 end

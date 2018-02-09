@@ -1,8 +1,5 @@
 <div class="row">
-  <div class="page-control-btn control-btn-left">
-  <span class="fa fa-arrow-left"></span> 
-   Back
-  </div>
+  <%= link_to 'Back', {controller: :questions, action: :show, id: @previous_question_id, next_question: nil}, class: 'page-control-btn control-btn-left delink' if !@previous_question_id.nil? %>
   <% if !@next_question.nil? %>
 		<%= submit_tag "Next", class: "page-control-btn control-btn-right" %>
   <% else %>
