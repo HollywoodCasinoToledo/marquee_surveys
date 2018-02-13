@@ -183,6 +183,7 @@ class Question < ActiveRecord::Base
 
 	  if !question.category_id.nil?
 	  	groupable = Array.new
+	  	groupable.push(question.id)
 	  	Question.where(active: true).where(category_id: question.category_id).where("position <= ?", question.position).order(position: :desc).each { |q| q.is_groupable ? groupable.push(q.id) : break }
 	  	return groupable.last
 	  else
