@@ -135,8 +135,20 @@ class Question < ActiveRecord::Base
 
 	end
 
-	def is_groupable
+	def can_be_displayed(selected)
+		self.parent.nil? || selected.include?(self.parent)
+	end
+
+	def is_groupable(selected)
+		self.is_groupable_style && self.is_groupable_based_on_parent(selected)
+	end
+
+	def is_groupable_style
 		self.style == Question::STYLE_RATE_3 || self.style == Question::STYLE_RATE_5 || self.style == Question::STYLE_BOOL
+	end
+
+	def is_groupable_based_on_parent(selected)
+		self.parent.nil? || selected.include?(self.parent)
 	end
 
 	def get_first_in_display_group
@@ -162,29 +174,26 @@ class Question < ActiveRecord::Base
 		return @selection_hash
 	end
 
-	def get_next_question(parents)
-		if Question.find_by(position: self.position + 1).nil?
+	def get_next_question(selected)
+		if Question.find_by(active: true, position: self.position + 1).nil?
 			return nil
 		else
-			loop do
-				q = Question.find_by(active: true, position: self.position + 1)
-				if q.parent.nil?
-					break
-				else
-					break if parents.include?(q.parent.to_s)
-				end
-			end
+			q = self
+	  	loop do
+	      q = Question.find_by(active: true, position: q.position + 1)
+	      break unless !q.can_be_displayed(selected)
+	    end
 			return q
 		end
 	end
 
-	def get_previous_question_id
+	def get_previous_question_id(selected)
 		question = Question.find_by(position: self.position - 1)
 
 	  if !question.category_id.nil?
 	  	groupable = Array.new
-	  	groupable.push(question.id)
-	  	Question.where(active: true).where(category_id: question.category_id).where("position <= ?", question.position).order(position: :desc).each { |q| q.is_groupable ? groupable.push(q.id) : break }
+	  	groupable.push(question.id) if question.is_groupable(selected)
+	  	Question.where(active: true).where(category_id: question.category_id).where("position <= ?", question.position).order(position: :desc).each { |q| q.is_groupable(selected) ? groupable.push(q.id) : break }
 	  	return groupable.last
 	  else
 	  	question.id

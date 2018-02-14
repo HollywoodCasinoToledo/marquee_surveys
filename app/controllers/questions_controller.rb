@@ -28,22 +28,22 @@ class QuestionsController < ApplicationController
 	end
 
 	def move
-		@ordered_array = Array.new
+		@display_ordered_array = Array.new
 		@question = Question.find(params[:id])
 		@questions = Question.all.map(&:category_id).map! { |x| x.nil? ? 0 : x }.chunk{|n| n}.map(&:first)
 		uncategorized_questions = Question.where(active: true, category_id: nil).map(&:title)
 		@questions.each do |x| 
 			if x == 0
-				@ordered_array.push(uncategorized_questions.shift)
+				@display_ordered_array.push(uncategorized_questions.shift)
 			else
-				@ordered_array.push({Category.find(x).name => Question.where(category_id: x).map(&:title)})
+				@display_ordered_array.push({Category.find(x).name => Question.where(category_id: x).map(&:title)})
 			end
 		end
 		@possible_moves = Array.new
 		if @question.category_id.nil?
 			@possible_moves = Question.where.not(id: @question.id).group('IFNULL(category_id, id)').order(:position).to_a.map.with_index { |q, i| [q.position.to_s + ". " + q.title, q.id] }
 		else
-			@possible_moves = Question.where.not(id: @question.id).where(category_id: @question.category_id).to_a.map.with_index { |q, i| [q.position.to_s + ". " + q.title, q.id] }
+			@possible_moves = Question.where.not(id: @question.id).order(:position).where(category_id: @question.category_id).to_a.map.with_index { |q, i| [q.position.to_s + ". " + q.title, q.id] }
 		end
 		@possible_moves.push(['Move to end', 'move_to_end']) if @question.category_id.nil?
 	end
@@ -61,6 +61,36 @@ class QuestionsController < ApplicationController
 
 	def show
 		@question = Question.find(params[:id])
+		@selected_answers = Response.where(instance_id: session[:instance_id]).map(&:answer_id)
+
+		# Create array of starting display questions for backwards navigation.
+		# Get questions that will be able to be grouped AND can depend on parent questions within the group. This will add the depending
+		# child question to the top of the group and will display if the correct parent is selected.
+		@starting_positions1 = Question.select('min(position) as pos').group(:category_id).order(:position).map(&:pos)
+		@starting_positions2 = Question.where(style: [Question::STYLE_RATE_3, Question::STYLE_RATE_5, Question::STYLE_BOOL]).select('min(position) as pos').group(:category_id).order(:position).map(&:pos)
+		@display_order = Question.where(position: [@starting_positions1, @starting_positions2]).map(&:id)
+		@styles = Question.where.not(category_id: nil, parent: nil).where(style: [Question::STYLE_RATE_3, Question::STYLE_RATE_5, Question::STYLE_BOOL]).order(:position).map(&:id)
+		
+		# Merge together and order the array of question display starter IDs
+		@starters = @display_order.push(@styles).flatten
+		@display_order = Question.order(:position).find(@starters).map(&:id)
+
+		# Get the question previous to the quesiton in the array for the back button
+		this_index = @display_order.index(@question.id)
+
+		if !@question.can_be_displayed(@selected_answers) && this_index < @display_order.count
+			if params[:direction] == "Back"
+				redirect_to controller: :questions, action: :show, id: Question.find(@display_order.fetch(this_index - 1) )
+			else
+				redirect_to controller: :questions, action: :show, id: Question.find(@display_order.fetch(this_index + 1) )
+			end
+		end
+
+		@previous_question_id = @display_order.fetch(this_index - 1)
+		if this_index < @display_order.count - 1
+			@next_question_id = @display_order.fetch(this_index + 1) 
+		end
+
 		if @question.position == 1
 	    loop do
 	      session[:instance_id] = SecureRandom.hex.slice(0..12)
@@ -68,34 +98,25 @@ class QuestionsController < ApplicationController
 	    end
 	  end
 
+	  
+	  @question = @question.get_next_question(@selected_answers) if !@question.can_be_displayed(@selected_answers)
 		@questions = Question.where(active: true).order(:position)
+
 		if @question.category_id.nil?
 			@answers = Answer.where(question_id: @question.id)
-			@next_question = Question.find_by(active: true, position: @question.position + 1)
 		else
 			@category = Category.find(@question.category_id) 
 			groupable = Array.new
-			@questions.where(category_id: @category.id).where("position >= ?", @question.position).each { |q| q.is_groupable ? groupable.push(q.id) : break }
-			@question_group = @questions.find(groupable)
-			if @question_group.nil? || @question_group.count == 0
-				@next_question = Question.find_by(active: true, position: @question.position + 1)
+			if this_index + 1 < @display_order.count
+				next_display_order_position = Question.find(@display_order.fetch(this_index + 1)).position
 			else
-				@next_question = Question.find_by(active: true, position: @question_group.last.position + 1)
+				next_display_order_position = @questions.last.position + 1
 			end
+			@questions.where(category_id: @category.id).where("position >= ? AND position < ?", @question.position, next_display_order_position).each { |q| q.is_groupable(@selected_answers) ? groupable.push(q.id) : break }
+			@question_group = @questions.find(groupable)
 		end
 		
 		@first_question = Question.find_by(active: true, position: 1) if @next_question.nil?
-		@previous_question_id = @question.get_previous_question_id if @question.position > 1
-		@selected_answers = Response.where(instance_id: session[:instance_id]).map(&:answer_id)
-
-		#@voted_q = @questions.joins(:votes).where('votes.employee_id = ?', @current_user.IDnum).map(&:id) #Questions voted on
-		#@voted_a_all_ids = Vote.where(employee_id: @current_user.IDnum).joins(:question).where('questions.poll_id = ?', @poll.id).group(:answer_id).map(&:answer_id)
-		#@voted_a = Vote.where(employee_id: @current_user.IDnum, question_id: @question.id)
-		#@voted_a_ids = @voted_a.map(&:answer_id).to_a
-		#@voted_a_titles = @voted_a.map(&:map_voted_titles_in_string).to_a
-		#@commented = @questions.joins(:comments).where('comments.employee_id = ?', @current_user.IDnum).map(&:id)
-		#@comment = Comment.find_by(employee_id: @current_user.IDnum, question_id: @question.id) if @question.style == Question::STYLE_CMNT
-		#@parents = Question.where.not(parent: nil).group(:parent).map(&:id)
 	end
 
 	def update

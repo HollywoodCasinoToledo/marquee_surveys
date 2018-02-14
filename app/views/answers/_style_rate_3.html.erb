@@ -3,7 +3,7 @@
 	  <div class="col-md-4">
 	  	<div class="options-button <%= @question.multiple ? 'multiple_answers' : 'single_answer' %> tr-clickable <%= 'selected' if @selected_answers.include?(a.id) %>" data-answer_id="<%= a.id %>" data-question_id="<%= @question.id %>">
 	  	  <%= a.title %>
-	  	  <%= check_box_tag 'answers[%s]' % [a.id], nil, false, class: 'hidden' %>
+	  	  <%= check_box_tag 'answers[%s]' % [a.id], nil, @selected_answers.include?(a.id), class: 'hidden' %>
 			</div>
 	  </div>
   <% end %>
