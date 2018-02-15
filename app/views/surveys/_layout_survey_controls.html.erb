@@ -1,6 +1,6 @@
 <div class="row">
-  <%= link_to 'Back', {controller: :questions, action: :show, id: @previous_question_id, direction: "Back"}, class: 'page-control-btn control-btn-left delink', data: {turbolinks: false} if !@previous_question_id.nil? %>
-  <% if !@next_question_id.nil? %>
+  <%= link_to 'Back', {controller: :questions, action: :show, id: @previous_question_id, order: @order_back}, class: 'page-control-btn control-btn-left delink', data: {turbolinks: false} if !@previous_question_id.nil? %>
+  <% if !@next_question.nil? %>
 		<%= submit_tag "Next", class: "page-control-btn control-btn-right" %>
   <% else %>
   	<%= submit_tag "Finish", class: "page-control-btn control-btn-right" %>

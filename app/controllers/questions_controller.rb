@@ -28,15 +28,15 @@ class QuestionsController < ApplicationController
 	end
 
 	def move
-		@display_ordered_array = Array.new
+		@ordered_array = Array.new
 		@question = Question.find(params[:id])
 		@questions = Question.all.map(&:category_id).map! { |x| x.nil? ? 0 : x }.chunk{|n| n}.map(&:first)
 		uncategorized_questions = Question.where(active: true, category_id: nil).map(&:title)
 		@questions.each do |x| 
 			if x == 0
-				@display_ordered_array.push(uncategorized_questions.shift)
+				@ordered_array.push(uncategorized_questions.shift)
 			else
-				@display_ordered_array.push({Category.find(x).name => Question.where(category_id: x).map(&:title)})
+				@ordered_array.push({Category.find(x).name => Question.where(category_id: x).map(&:title)})
 			end
 		end
 		@possible_moves = Array.new
@@ -61,36 +61,6 @@ class QuestionsController < ApplicationController
 
 	def show
 		@question = Question.find(params[:id])
-		@selected_answers = Response.where(instance_id: session[:instance_id]).map(&:answer_id)
-
-		# Create array of starting display questions for backwards navigation.
-		# Get questions that will be able to be grouped AND can depend on parent questions within the group. This will add the depending
-		# child question to the top of the group and will display if the correct parent is selected.
-		@starting_positions1 = Question.select('min(position) as pos').group(:category_id).order(:position).map(&:pos)
-		@starting_positions2 = Question.where(style: [Question::STYLE_RATE_3, Question::STYLE_RATE_5, Question::STYLE_BOOL]).select('min(position) as pos').group(:category_id).order(:position).map(&:pos)
-		@display_order = Question.where(position: [@starting_positions1, @starting_positions2]).map(&:id)
-		@styles = Question.where.not(category_id: nil, parent: nil).where(style: [Question::STYLE_RATE_3, Question::STYLE_RATE_5, Question::STYLE_BOOL]).order(:position).map(&:id)
-		
-		# Merge together and order the array of question display starter IDs
-		@starters = @display_order.push(@styles).flatten
-		@display_order = Question.order(:position).find(@starters).map(&:id)
-
-		# Get the question previous to the quesiton in the array for the back button
-		this_index = @display_order.index(@question.id)
-
-		if !@question.can_be_displayed(@selected_answers) && this_index < @display_order.count
-			if params[:direction] == "Back"
-				redirect_to controller: :questions, action: :show, id: Question.find(@display_order.fetch(this_index - 1) )
-			else
-				redirect_to controller: :questions, action: :show, id: Question.find(@display_order.fetch(this_index + 1) )
-			end
-		end
-
-		@previous_question_id = @display_order.fetch(this_index - 1)
-		if this_index < @display_order.count - 1
-			@next_question_id = @display_order.fetch(this_index + 1) 
-		end
-
 		if @question.position == 1
 	    loop do
 	      session[:instance_id] = SecureRandom.hex.slice(0..12)
@@ -98,25 +68,37 @@ class QuestionsController < ApplicationController
 	    end
 	  end
 
-	  
+	  @selected_answers = Response.where(instance_id: session[:instance_id]).map(&:answer_id)
+
 	  @question = @question.get_next_question(@selected_answers) if !@question.can_be_displayed(@selected_answers)
+
 		@questions = Question.where(active: true).order(:position)
 
 		if @question.category_id.nil?
 			@answers = Answer.where(question_id: @question.id)
+			@next_question = Question.find_by(active: true, position: @question.position + 1)
 		else
 			@category = Category.find(@question.category_id) 
 			groupable = Array.new
-			if this_index + 1 < @display_order.count
-				next_display_order_position = Question.find(@display_order.fetch(this_index + 1)).position
-			else
-				next_display_order_position = @questions.last.position + 1
-			end
-			@questions.where(category_id: @category.id).where("position >= ? AND position < ?", @question.position, next_display_order_position).each { |q| q.is_groupable(@selected_answers) ? groupable.push(q.id) : break }
+			@questions.where(category_id: @category.id).where("position >= ?", @question.position).each { |q| q.is_groupable(@selected_answers) ? groupable.push(q.id) : break }
 			@question_group = @questions.find(groupable)
+			if @question_group.nil? || @question_group.count == 0
+				@next_question = Question.find_by(active: true, position: @question.position + 1)
+			else
+				@next_question = Question.find_by(active: true, position: @question_group.last.position + 1)
+			end
 		end
 		
 		@first_question = Question.find_by(active: true, position: 1) if @next_question.nil?
+
+		if !params[:order].nil?
+			ary = params[:order].split(",")
+			@order_array = ary
+			@order_string = params[:order]
+			@previous_question_id = ary.pop.to_i
+			@order_back = ary.join(",")
+		end
+		
 	end
 
 	def update
