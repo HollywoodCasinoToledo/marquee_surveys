@@ -18,7 +18,7 @@ class ResponsesController < ApplicationController
 			redirect_to controller: :questions, action: :show, id: params[:next_question], order: order.join(",")
 		else
 			first_question = Question.find_by( position: 1)
-			redirect_to controller: :questions, action: :show, id: first_question.id
+			redirect_to controller: :surveys, action: :confirm
 		end
 	end
 

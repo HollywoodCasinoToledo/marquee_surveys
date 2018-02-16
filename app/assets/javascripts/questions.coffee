@@ -103,5 +103,16 @@ $(document).ready ->
     return
   )
 
+  $(".confirm-image").animate({
+        fontSize: '+=150px',
+        marginTop: '+=200px'
+    });
+  $(".confirm-message").animate({
+        opacity: '+=1'
+    });
+  $(".confirm-button").animate({
+        opacity: '+=1'
+    });
+
 
   return

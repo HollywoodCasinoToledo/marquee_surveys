@@ -1,0 +1,15 @@
+<% content_for :title, "Vote Confirmed" %>
+<meta http-equiv="refresh" content="<%= @redirect_time.to_s %>;url=<%= root_path %>" />
+<div  onload="init()" class="page-content-wrap">
+		<div class="confirm-container">
+			<div class="confirm-image">
+				<span class="fa fa-check-circle"></span>
+			</div>
+			<div class="confirm-message">
+				Thank you for your feedback!
+			</div>
+			<div class="confirm-button">
+				<button class="btn btn-default btn-lg">Redirecting...</button>
+			</div>
+		</div>
+</div>

@@ -8,6 +8,8 @@ Rails.application.routes.draw do
 
    get 'questions/:id'													=> 'questions#show'
 
+   get 'confirm'																=> 'surveys#confirm'
+
    post 'responses'															=> 'responses#create'
 
    get 'admin'																	=> 'admin#control_panel'

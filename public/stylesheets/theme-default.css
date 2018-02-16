@@ -4497,9 +4497,14 @@ ul.panel-controls > li > .dropdown-menu:before {
 }
 .btn.btn-lg,
 .btn-group-lg > .btn {
-  font-size: 14px;
-  padding: 12px 20px;
-  margin: 0px 4px 0px 4px;
+	font-size: 14px;
+	padding: 12px 20px;
+	margin: 0px 4px 0px 4px;
+	background-color: #00000030;
+	border-radius: 5px;
+	text-align: center;
+	border: 0px;
+	color: #fff8c6;
 }
 .btn.btn-huge, {
   font-size: 14px;
@@ -11760,6 +11765,7 @@ a {
 	font-size: 0px;
   transition: all 0.5s ease-out 0s;
   -webkit-transition: all 0.5s ease-out 0s;
+  color: #fff8a4;
 }
 .confirm-image-animate {
 	font-size: 130px;
@@ -11767,6 +11773,7 @@ a {
 .confirm-message {
 	font-size: 50px;
 	opacity: 0.0;
+	color: #fff8c6;
 	transition: all 0.5s ease-out 0s;
   -webkit-transition: all 0.5s ease-out 0s;
 }
