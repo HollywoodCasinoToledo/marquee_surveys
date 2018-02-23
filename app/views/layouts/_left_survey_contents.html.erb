@@ -13,6 +13,7 @@
 						<div class="list-group-controls options hidden">
 	        <%= link_to controller: :answers, action: :new, question: q do %><span class="fa fa-plus pull-right"></span><% end %>
 	        <%= link_to controller: :questions, action: :edit, id: q do %><span class="fa fa-pencil pull-right"></span><% end %>
+	        <%= link_to controller: :admin, action: :results, id: q do %><span class="fa fa-bar-chart-o pull-right"></span><% end %>
 	      </div></div></li>
 						<% Answer.where(question_id: q).each do |a| %>
 							<li class="dd-item <%= 'hidden' unless !@question.nil? && q == @question.id %>"><div class="dd-handle answer" data-id="3" data-question="<%= q %>"><%= a.title %>
@@ -31,15 +32,18 @@
 					<div class="list-group-controls options hidden">
 	        <%= link_to controller: :answers, action: :new, question: o do %><span class="fa fa-plus pull-right"></span><% end %>
 	        <%= link_to controller: :questions, action: :edit, id: o do %><span class="fa fa-pencil pull-right"></span><% end %>
+					<%= link_to controller: :admin, action: :results, id: o do %><span class="fa fa-bar-chart-o pull-right"></span><% end %>
 	      </div></div>
 				</li>
 
 				<% Answer.where(question_id: o).each do |a| %>
-					<li class="dd-item <%= 'hidden' unless !@question.nil? && o == @question.id %>"><div class="dd-handle answer" data-id="3" data-question="<%= o %>"><%= a.title %>
+					<li class="dd-item <%= 'hidden' unless !@question.nil? && o == @question.id %>">
+						<div class="dd-handle answer" data-id="3" data-question="<%= o %>"><%= a.title %>
 						<div class="list-group-controls options hidden">
-	        <%= link_to controller: :answers, action: :edit, id: a do %><span class="fa fa-pencil pull-right"></span><% end %>
-	      </div>
-					</div></li>
+	        		<%= link_to controller: :answers, action: :edit, id: a do %><span class="fa fa-pencil pull-right"></span><% end %>
+	      			</div>
+						</div>
+					</li>
 				<% end %>
 
 			<% end %>

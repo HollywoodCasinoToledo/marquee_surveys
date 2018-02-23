@@ -8,6 +8,10 @@ module AdminsHelper
 		current
 	end
 
+	def button_class_from_params(key, param)
+		key == param ? 'btn btn-default btn-primary' : 'btn btn-default'
+	end
+
 
 end
  

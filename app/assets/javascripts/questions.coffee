@@ -103,6 +103,11 @@ $(document).ready ->
     return
   )
 
+  $('.options a').on('click', (e) ->
+    e.stopPropagation()
+    return
+  )
+
   $(".confirm-image").animate({
         fontSize: '+=150px',
         marginTop: '+=200px'

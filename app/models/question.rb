@@ -135,6 +135,10 @@ class Question < ActiveRecord::Base
 
 	end
 
+	def can_calculate_rating
+		self.style == Question::STYLE_RATE_3 || self.style == Question::STYLE_RATE_5 || self.style == Question::STYLE_BOOL
+	end
+
 	def can_be_displayed(selected)
 		self.parent.nil? || selected.include?(self.parent)
 	end

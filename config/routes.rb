@@ -14,6 +14,7 @@ Rails.application.routes.draw do
 
    get 'admin'																	=> 'admin#control_panel'
    get 'admin/survey'														=> 'admin#edit_survey'
+   get 'admin/archive'													=> 'admin#archive'
 
    get 'admin/category/new'											=> 'categories#new'
    post 'admin/category/new'										=> 'categories#create'
@@ -29,6 +30,8 @@ Rails.application.routes.draw do
    post 'admin/answer/new'											=> 'answers#create'
    get 'admin/answer/:id/edit'									=> 'answers#edit'
    patch 'admin/answer/:id/edit'								=> 'answers#update'
+
+   get 'admin/results/:id'											=> 'admin#results'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

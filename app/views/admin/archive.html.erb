@@ -1,0 +1,61 @@
+<% content_for :title, "Archive" %>
+
+<!-- START BREADCRUMB -->
+<ul class="breadcrumb">
+	<li><a href="/">Home</a></li>  
+	<li>Control Panel</li> 
+	<li>Archive</li>          
+</ul>
+<!-- END BREADCRUMB --> 
+
+<div class="content-frame">
+  <div class="content-frame-top">                        
+    <div class="page-title">                    
+      <h2><span class="fa fa-cog"></span> Control Panel - Archive</h2>
+    </div>                                      
+    <div class="pull-right">
+      <button class="btn btn-default content-frame-left-toggle"><span class="fa fa-bars"></span></button>
+    </div>                        
+  </div>
+  <!-- END CONTENT FRAME TOP -->
+  
+  <!-- START CONTENT FRAME LEFT -->
+  <div class="content-frame-left">
+		<%= render 'layouts/left_survey_contents' %>
+  </div>
+  <!-- END CONTENT FRAME LEFT -->
+  
+  <!-- START CONTENT FRAME BODY -->
+  <div class="content-frame-body">
+  	<div class="row">
+	    <div class="col-md-8">
+	    	<div class="panel panel-default">
+	    		<div class="panel-heading">
+				    <h3 class="panel-title">Deactivated Questions</h3>
+				  </div>
+	      	<div class="panel-body panel-body-table table-responsive">
+	      		<% if @questions.blank? %>
+	      			<p>No questions are currently inactive.</p>
+	      		<% else %>
+		    	  	<table class="table table-striped">
+		    	  		<tbody>
+		    	  			<% @questions.each do |q| %>
+		    	  				<tr>
+		    	  					<td> <%= q.title %> </td>
+		    	  					<td> <%= link_to 'View Results', {}, class: 'btn btn-primary' %> </td>
+		    	  					<td> <%= button_to 'Activate', {controller: :questions, action: :update, id: q.id, question: {active: true, operation: :activate}}, method: :patch, class: 'btn btn-success btn-list' %>  </td>
+		    	  				</tr>
+		    	  			<% end %>
+		    	  		</tbody>
+		    	  	</table>
+	    	  	<% end %>
+	      	</div>
+	      	<div class="panel-footer">
+
+					</div>
+	  		</div>
+	    </div>
+		</div>
+
+  </div>
+</div>

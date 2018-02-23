@@ -32,6 +32,7 @@
 		<h2><span class="fa fa-pencil"></span> Edit Question
 		<%= link_to 'Move', {controller: :questions, action: :move, id: @question.id}, class: 'btn btn-primary' %>
 		<%= link_to 'Edit Parent', {controller: :questions, action: :parent, id: @question.id}, class: 'btn btn-primary' %>
+		<%= button_to 'Deactivate', {controller: :questions, action: :update, question: {active: false, operation: :deactivate}}, method: :patch, class: 'btn btn-danger', form_class: 'inline' %>
 		</h2>
     <div class="panel panel-default panel-body max-x-1000">
 			<%= form_for :question, :url => {:controller => :questions, action: :update}, method: :patch do |f| %>

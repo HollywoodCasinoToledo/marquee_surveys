@@ -1,0 +1,84 @@
+<div class="row">
+  <div class="col-lg-3 col-md-3">
+
+  	<h4>Response Stats</h4>
+		<div class="panel panel-default panel-body">
+  		<table class="table">
+  			<tr>
+  				<td>Total Responses</td>
+  				<td id='total_responses'><%= @responses.count %></td>
+  			</tr>
+  		</table>
+  	</div>
+
+  	<h4>Answer Results</h4>
+
+    <div class="panel panel-default">
+    	<table class="table table-bordered">
+    		<thead>
+    			<th>Answer</th>
+    			<th>Votes</th>
+    			<th>%</th>
+    		</thead>
+    		<tbody id="responses_data_table">
+				<% @answers.each do |a| 
+					@count = @responses.where(answer_id: a).count %>
+					<tr>
+						<td><%= a.title %></td>
+						<td><%= @count %></td>
+						<td><%= ((@count.to_f / @responses.count.to_f) * 100).round(2) %>%</td>
+					</tr>
+				<% end %>
+				</tbody>
+			</table>
+  	</div>
+
+  	<div class="panel panel-default">
+    	<table class="table table-bordered">
+    		<thead>
+    			<th>Day</th>
+    			<th>Votes</th>
+    		</thead>
+    		<tbody id="responses_date_data_table">
+				<% @day_data.each do |d| %>
+					<tr>
+						<td><%= d[0] %></td>
+						<td><%= d[1] %></td>
+					</tr>
+				<% end %>
+				</tbody>
+			</table>
+  	</div>
+  </div>
+
+
+
+  <div class="col-lg-9 col-md-9 col-sm-12">
+	  <div class="row">
+	  <h4>Visualized</h4>
+			<div class="col-lg-8 col-md-8 col-sm-12">
+		  	<div class="panel panel-default panel-body">
+			    <div id="responses_bar" style=" margin: 0px;">
+			    </div>
+			  </div>
+			</div>
+			<div class="col-lg-4 col-md-4 col-sm-12">
+				<div class="panel panel-default panel-body">
+		  		<div id="responses_pie" style="margin: 0px;">
+		  		</div>
+				</div>
+		  </div>
+	  </div>
+
+	 	<div class="row">
+			<div class="col-lg-12 col-md-12 col-sm-12">
+		  	<div class="panel panel-default panel-body">
+			    <div id="responses_line" style=" margin: 0px;">
+			    </div>
+			  </div>
+			</div>
+	  </div>
+	</div>
+
+
+</div>

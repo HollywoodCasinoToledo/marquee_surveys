@@ -126,7 +126,7 @@ class QuestionsController < ApplicationController
 
 	private 
 		def question_params
-			params.require(:question).permit(:survey_id, :title, :style, :required, :category_id, :multiple)
+			params.require(:question).permit(:survey_id, :title, :style, :required, :category_id, :multiple, :active)
 		end
 
 	def decide_layout

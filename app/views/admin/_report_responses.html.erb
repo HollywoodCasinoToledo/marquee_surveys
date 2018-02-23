@@ -1,0 +1,118 @@
+<%= check_box_tag 'colorize_rates', true, false, value: @question.can_calculate_rating, class: 'hidden' %>
+
+<div class="full-page-divider">Overall Stats</div>
+<div class="row">
+  <div class="col-lg-3 col-md-3">
+
+  	<h4>Response Stats</h4>
+		<div class="panel panel-default panel-body">
+  		<table class="table">
+  			<tr>
+  				<td>Total Responses</td>
+  				<td id='total_responses'><%= @responses.count %></td>
+  			</tr>
+  		</table>
+  	</div>
+
+  	<h4>Answer Results</h4>
+
+    <div class="panel panel-default">
+    	<table class="table table-bordered">
+    		<thead>
+    			<th>Answer</th>
+    			<th>Votes</th>
+    			<th>%</th>
+    		</thead>
+    		<tbody id="responses_data_table">
+				<% @answers.each do |a|  
+					total = @answer_totals[a.id].nil? ? 0 : @answer_totals[a.id] %>
+					<tr>
+						<td><%= a.title %></td>
+						<td><%= total %></td>
+						<td><%= ((total.to_f / @responses.count.to_f) * 100).round(2) %>%</td>
+					</tr>
+				<% end %>
+				</tbody>
+			</table>
+  	</div>
+  </div>
+
+  <div class="col-lg-9 col-md-9 col-sm-12">
+	  <div class="row">
+	  <h4>Overall</h4>
+			<div class="col-lg-8 col-md-8 col-sm-12">
+		  	<div class="panel panel-default panel-body">
+			    <div id="responses_bar" style="margin: 0px;">
+			    </div>
+			  </div>
+			</div>
+			<div class="col-lg-4 col-md-4 col-sm-12">
+				<div class="panel panel-default panel-body">
+		  		<div id="responses_pie" style="margin: 0px;">
+		  		</div>
+				</div>
+		  </div>
+	  </div>
+	</div>
+</div>
+
+<div class="full-page-divider">Filter By Days
+	<%= form_tag (''), :action => 'results', method: 'GET', id: 'filter_form' do %>
+		<div class="row push-up-5">
+			<div class="col-md-4">
+			</div>
+			<div class="col-md-4">
+				<div class="col-md-5">
+			    <%= text_field_tag :from, params[:from], {class: 'form-control input-group date datepicker', 'data-provide' => 'datepicker', 'data-date-format' => "yyyy-mm-dd", placeholder: "From"} %>
+			  </div>
+				<div class="col-md-5">
+			    <%= text_field_tag :to, params[:to], {class: 'form-control input-group date datepicker', 'data-provide' => 'datepicker', 'data-date-format' => "yyyy-mm-dd", placeholder: "To"} %>
+			  </div>
+			  <div class="col-md-2">
+			    <%= submit_tag 'Filter', class: 'btn btn-primary' %>
+			  </div>
+			</div>
+			<div class="col-md-4">
+			</div>
+		</div>
+	<% end %>
+</div>
+
+<% if !@day_data.nil? %>
+	<div class="row">
+		<div class="col-lg-4 col-md-4 col-sm-12">
+	  	<div class="panel panel-default">
+	  		<div class="table-responsive">
+		    	<table class="table table-bordered">
+		    		<tbody id="responses_date_data_table">
+		    			<tr>
+			    			<td>Day</td>
+			    			<td>Votes</td>
+			    			<% @answers.each do |a| %>
+									<td><%= a.title %></td>
+								<% end %>
+							</tr>
+						<% @day_data.each do |d| %>
+							<tr>
+								<td><%= d[0] %></td>
+								<td><b><%= d[1] %></b></td>
+								<% @answers.each do |a| %>
+									<td><%= @responses.where(answer_id: a).where('DATE(created_at) = ?', d[0]).count %></td>
+								<% end %>
+							</tr>
+						<% end %>
+						</tbody>
+					</table>
+				</div>
+	  	</div>
+	  </div>
+		<div class="col-lg-8 col-md-8 col-sm-12">
+	  	<div class="panel panel-default panel-body">
+		    <div id="responses_line" style=" margin: 0px;">
+		    </div>
+		  </div>
+		</div>
+
+
+	</div>
+<% end %>

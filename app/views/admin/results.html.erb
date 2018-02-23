@@ -1,0 +1,41 @@
+<% content_for :title, "Manage Polls" %>
+
+<!-- START BREADCRUMB -->
+<ul class="breadcrumb">
+	<li><a href="/">Home</a></li>  
+	<li>Admin</li>
+	<li>Reports</li> 
+	<li>Question</li>
+	<li><%= @question.id %></li>         
+</ul>
+<!-- END BREADCRUMB -->
+
+<div class="page-content-wrap">
+
+	<div class="row push-up-10">  
+		<div class="col-md-12">                      
+		  <div class="page-title">                    
+		    <h2><span class="fa fa-bar-chart-o"></span> Control Panel - Results </h2>
+		  </div>      
+	  </div>                                                   
+	</div>
+
+	<div class="row">
+  	<div class="col-md-7 push-down-20">
+      <div class="push-right-8 btn-group btn-group-lg">
+        <%= link_to 'All', {controller: :admin, action: :results, id: params[:id]}, class: button_class_from_params(nil, params[:onlyshow]) %>
+        <%= link_to 'Members', {controller: :admin, action: :results, id: params[:id], onlyshow: "Members"}, class: button_class_from_params('Members', params[:onlyshow]) %>
+        <%= link_to 'Anonymous', {controller: :admin, action: :results, id: params[:id], onlyshow: "Anon"}, class: button_class_from_params('Anon', params[:onlyshow]) %>
+      </div>
+    </div>
+  </div>
+
+	<div class="row">
+    <div class="col-md-12">
+			<% if @question.style == Question::STYLE_CMNT %>
+			<% else %>
+				<%= render 'report_responses' %>
+			<% end %>
+		</div>
+	</div>
+</div>
