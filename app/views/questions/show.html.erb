@@ -14,7 +14,7 @@
 		</div>
 	<% end %>
 
-<%= form_tag({controller: :responses, action: :create}, {method: :post}) do %>
+<%= form_tag(@route, {method: :post}) do %>
 	<%= hidden_field_tag :current_question, @question.id %>
 	<%= hidden_field_tag :order, @order_string %>
 	<%= hidden_field_tag :next_question, @next_question.id if !@next_question.nil?  %>

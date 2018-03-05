@@ -30,19 +30,29 @@ class AdminController < ApplicationController
 
 	def results
 		@question = Question.find(params[:id])
-		@answers = Answer.where(question_id: @question.id)
-		@responses = Response.where(question_id: @question.id)
-		if params[:onlyshow] == "Members"
-			@responses = @responses.where.not(patron_id: nil)
-		elsif params[:onlyshow] == "Anon"
-			@responses = @responses.where(patron_id: nil)
-		end
-		@answer_totals = @responses.group(:answer_id).count
-
-		if !params[:from].blank?
-			@day_data = @responses.created_after(params[:from]).created_before(params[:to]).group_by(&:group_by_date).map {|k,v| [k, v.length]}.sort
+		if @question.style == Question::STYLE_CMNT
+			@results = Comment.where(question_id: @question.id)
+			@results = @results.where('comment LIKE ?', "%#{params[:keyword]}%") if !params[:keyword].nil?
+		else
+			@answers = Answer.where(question_id: @question.id)
+			@results = Response.where(question_id: @question.id)
+			@answer_totals = @results.group(:answer_id).count
 		end
 		
+		if params[:onlyshow] == "Members"
+			@results = @results.where.not(patron_id: nil)
+		elsif params[:onlyshow] == "Anon"
+			@results = @results.where(patron_id: nil)
+		end
+		
+		if !params[:from].blank?
+			@day_data = @results.created_after(params[:from]).created_before(params[:to]).group_by(&:group_by_date).map {|k,v| [k, v.length]}.sort
+		end
+		
+	end
+	
+	def comments
+
 	end
 
 	def group_by_criteria

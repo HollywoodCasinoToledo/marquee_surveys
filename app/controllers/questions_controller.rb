@@ -91,6 +91,13 @@ class QuestionsController < ApplicationController
 		
 		@first_question = Question.find_by(active: true, position: 1) if @next_question.nil?
 
+		if @question.style == Question::STYLE_CMNT
+			@route = {controller: :comments, action: :create}
+		else
+			@route = {controller: :responses, action: :create}
+		end
+		
+
 		if !params[:order].nil?
 			ary = params[:order].split(",")
 			@order_array = ary

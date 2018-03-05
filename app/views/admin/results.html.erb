@@ -33,6 +33,7 @@
 	<div class="row">
     <div class="col-md-12">
 			<% if @question.style == Question::STYLE_CMNT %>
+				<%= render 'report_comments' %>
 			<% else %>
 				<%= render 'report_responses' %>
 			<% end %>

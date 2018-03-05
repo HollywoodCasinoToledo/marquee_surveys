@@ -11,6 +11,7 @@ Rails.application.routes.draw do
    get 'confirm'																=> 'surveys#confirm'
 
    post 'responses'															=> 'responses#create'
+   post 'comments'															=> 'comments#create'
 
    get 'admin'																	=> 'admin#control_panel'
    get 'admin/survey'														=> 'admin#edit_survey'

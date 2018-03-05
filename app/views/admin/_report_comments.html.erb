@@ -1,0 +1,42 @@
+
+<div class="full-page-divider"><%= @question.title %>
+	<%= form_tag (''), :action => 'results', method: 'GET', id: 'filter_form' do %>
+		<div class="row push-up-5">
+			<div class="col-md-2">
+			</div>
+			<div class="col-md-8">
+				<div class="col-md-3">
+			    <%= text_field_tag :from, params[:from], {class: 'form-control input-group date datepicker', 'data-provide' => 'datepicker', 'data-date-format' => "yyyy-mm-dd", placeholder: "From"} %>
+			  </div>
+				<div class="col-md-3">
+			    <%= text_field_tag :to, params[:to], {class: 'form-control input-group date datepicker', 'data-provide' => 'datepicker', 'data-date-format' => "yyyy-mm-dd", placeholder: "To"} %>
+			  </div>
+			  <div class="col-md-5">
+			    <%= text_field_tag :keyword, params[:keyword], {class: 'form-control input-group', placeholder: "Keywords"} %>
+			  </div>
+			  <div class="col-md-1">
+			    <%= submit_tag 'Filter', class: 'btn btn-primary' %>
+			  </div>
+			</div>
+			<div class="col-md-2">
+			</div>
+		</div>
+	<% end %>
+</div>
+
+<% @results.each do |r| %>
+	<div class="col-md-3">
+		<div class="messages">
+			<div class="item item-visible">                              
+			  <div class="text">
+			    <div class="heading">
+			      <a href="#"><%= r.patron_id %></a>
+			      <span class="date"><%= l r.created_at %></span>
+			    </div>                                    
+			    <%= r.comment %>
+			  </div>
+			</div>
+		</div>
+	</div>
+<% end %>
+
