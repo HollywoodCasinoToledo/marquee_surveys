@@ -81,7 +81,7 @@ class Question < ActiveRecord::Base
 	end
 
 	def place_at_end_of_category
-		last_question = Question.where.not(id: self.id).where(category_id: self.category_id).order(:position).last
+		last_question = Question.where.not(id: self.id).where(category_id: self.category_id, active: true).order(:position).last
 		if !last_question.nil? && !last_question.position.nil?
 			below_question = Question.find_by(position: last_question.position + 1)
 			if below_question.nil?
@@ -100,7 +100,7 @@ class Question < ActiveRecord::Base
 	end
 
 	def place_at_end_of_survey
-		last_question = Question.where(survey_id: 1).order(:position).last
+		last_question = Question.where(survey_id: 1, active: true).order(:position).last
 		if !last_question.nil? && !last_question.position.nil?
 			self.update_attribute(:position, last_question.position + 1)
 		else
@@ -110,7 +110,7 @@ class Question < ActiveRecord::Base
 
 	def move_to_end_of_survey
 		old_pos = self.position
-		last_question = Question.where(survey_id: 1).order(:position).last
+		last_question = Question.where(survey_id: 1, active: true).order(:position).last
 		if !last_question.nil? && !last_question.position.nil?
 			Question.where('position <= ? AND position > ?', last_question.position, old_pos).update_all("position = position - 1")
 			self.update_attribute(:position, last_question.position)

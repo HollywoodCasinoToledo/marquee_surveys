@@ -1,7 +1,9 @@
+<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+<script src="/javascripts/jkeyboard.js"></script>
+<link rel="stylesheet" href="/stylesheets/jkeyboard.css">
+
 <div class="row">
-		<%= form_for '' do |f| %>
-			<div class="survey-comment-box">  
-      	<%= f.text_area :comment, class: 'form-control survey-comment'  %>
-      </div>
-		<% end %>
+		<div class="survey-comment-box">  
+    	<%= text_area_tag :comment, '', class: 'form-control survey-comment'  %>
+    </div>
 </div>
