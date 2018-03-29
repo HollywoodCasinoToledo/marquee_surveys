@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180202231323) do
+ActiveRecord::Schema.define(version: 20180329175025) do
 
   create_table "admins", force: :cascade do |t|
     t.integer  "property_id",     limit: 4, null: false
@@ -54,10 +54,11 @@ ActiveRecord::Schema.define(version: 20180202231323) do
   end
 
   create_table "properties", force: :cascade do |t|
-    t.integer  "code",       limit: 4,   null: false
-    t.string   "name",       limit: 255, null: false
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.integer  "code",            limit: 4,                         null: false
+    t.string   "name",            limit: 255,                       null: false
+    t.datetime "created_at",                                        null: false
+    t.datetime "updated_at",                                        null: false
+    t.string   "password_digest", limit: 255, default: "Hollywood"
   end
 
   create_table "questions", force: :cascade do |t|

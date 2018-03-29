@@ -1,5 +1,6 @@
 class Response < ActiveRecord::Base
 
+	belongs_to :instance
 	belongs_to :answer
 	belongs_to :patron
 

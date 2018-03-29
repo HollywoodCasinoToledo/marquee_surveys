@@ -9,6 +9,7 @@
     
     <!-- <link rel="icon" href="favicon.ico" type="image/x-icon" /> --> 
     <%= stylesheet_link_tag "theme-default", id: "theme", media: "all" %>
+    <%=javascript_include_tag "application", "data-turbolinks-track" => true %>
 
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Andada" />
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Damion" />
@@ -24,7 +25,7 @@
     	<%= render 'layouts/flashes' %>
       <%= yield %>
 
-    <%=javascript_include_tag "application", "data-turbolinks-track" => true %>
+    
 
   </body>
 </html>

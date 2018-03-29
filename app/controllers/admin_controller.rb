@@ -1,6 +1,29 @@
 class AdminController < ApplicationController
 	include AdminsHelper 
-	layout 'application_admin'
+
+	layout :decide_layout
+	before_filter :authenticate_user_is_admin, :except => [:access, :authenticate]
+
+	# Login form for admin access
+  def access
+
+  end
+
+  # Verify correct login credentials and create new admin session
+  def authenticate
+  	#property = Property.find(25)
+  	#if property.authenticate(params[:password])
+    if params[:password] == "Toledo123"
+      session[:granted] = true
+      flash[:title] = "Success"
+      flash[:notice] = "Access Granted"
+      redirect_to action: :edit_survey
+	  else
+	  	flash[:title] = "Error"
+      flash[:notice] = "Access Denied"
+      redirect_to action: :access
+	  end
+  end
 
 	def archive
 		include_navigation_pane_variables 
@@ -57,6 +80,10 @@ class AdminController < ApplicationController
 
 	def group_by_criteria
 	  created_at.to_date.to_s(:db)
+	end
+
+	def decide_layout
+		['access'].include?(action_name) ? 'application_main' : 'application_admin'
 	end
 
 end

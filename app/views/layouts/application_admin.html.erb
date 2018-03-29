@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     
     <%= stylesheet_link_tag "theme-admin", id: "theme", media: "all" %>
+    <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
 
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Andada" />
     <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Damion" />
@@ -28,8 +29,5 @@
 
 	    </div>
 	  </div>
-
-    <%=javascript_include_tag "application", "data-turbolinks-track" => true %>
-
   </body>
 </html>

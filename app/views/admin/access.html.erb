@@ -1,0 +1,35 @@
+<% content_for :title, "Admin Access" %>
+
+<!-- START TITLE -->
+<div class="page-title">                    
+  <%= image_tag "Marquee-Logo.png" %>
+</div>
+<!-- END TITLE -->
+
+<div class="page-container" style="width: 25%;">
+
+	<div class="survey-group-name">
+		Verify Admin Access
+	</div>
+
+	<%= form_tag :admin, {method: :post} do %>
+		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+		<script src="/javascripts/jkeyboard.js"></script>
+		<link rel="stylesheet" href="/stylesheets/jkeyboard.css">
+
+		<div class="row">
+				<div class="survey-comment-box">  
+		    	<%= text_field_tag :password, '', id: 'comment', class: 'form-control'  %>
+		    </div>
+		</div>
+</div>
+
+<div class="page-controls">
+	<div class="row">
+	  <%= submit_tag "Verify", class: "page-control-btn control-btn-right" %>
+	</div>
+	<div class="row">
+		<div id="keyboard"></div>
+	</div>
+</div>
+<%- end  %>

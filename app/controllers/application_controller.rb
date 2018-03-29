@@ -16,4 +16,15 @@ class ApplicationController < ActionController::Base
 		end
   end
 
+  def authenticate_user_is_admin
+		if !session[:granted].nil? && session[:granted]
+			return true
+		else
+			flash[:title] = "Error"
+	  	flash[:notice] = "Enter password to accessd admin privileges."
+	    redirect_to controller: :admin, action: :access
+	    return false
+		end
+	end	
+
 end

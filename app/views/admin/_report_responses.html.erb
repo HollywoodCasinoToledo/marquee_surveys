@@ -9,7 +9,7 @@
   		<table class="table">
   			<tr>
   				<td>Total Responses</td>
-  				<td id='total_responses'><%= @responses.count %></td>
+  				<td id='total_responses'><%= @results.count %></td>
   			</tr>
   		</table>
   	</div>
@@ -29,7 +29,7 @@
 					<tr>
 						<td><%= a.title %></td>
 						<td><%= total %></td>
-						<td><%= ((total.to_f / @responses.count.to_f) * 100).round(2) %>%</td>
+						<td><%= ((total.to_f / @results.count.to_f) * 100).round(2) %>%</td>
 					</tr>
 				<% end %>
 				</tbody>
@@ -97,7 +97,7 @@
 								<td><%= d[0] %></td>
 								<td><b><%= d[1] %></b></td>
 								<% @answers.each do |a| %>
-									<td><%= @responses.where(answer_id: a).where('DATE(created_at) = ?', d[0]).count %></td>
+									<td><%= @results.where(answer_id: a).where('DATE(created_at) = ?', d[0]).count %></td>
 								<% end %>
 							</tr>
 						<% end %>

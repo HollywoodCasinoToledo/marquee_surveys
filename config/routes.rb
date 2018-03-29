@@ -13,7 +13,9 @@ Rails.application.routes.draw do
    post 'responses'															=> 'responses#create'
    post 'comments'															=> 'comments#create'
 
-   get 'admin'																	=> 'admin#control_panel'
+   get 'admin'																	=> 'admin#access'
+   post 'admin'																	=> 'admin#authenticate'
+   get 'admin/control_panel'										=> 'admin#control_panel'
    get 'admin/survey'														=> 'admin#edit_survey'
    get 'admin/archive'													=> 'admin#archive'
 
