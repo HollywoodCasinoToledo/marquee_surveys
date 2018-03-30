@@ -121,7 +121,12 @@ class QuestionsController < ApplicationController
 				question.update_attribute(:parent, params[:question][:parent].blank? ? nil : params[:question][:parent])
 			else
 				question.update_attributes(question_params)
-			end
+		end
+		position = 1
+		Question.where(active: true).order(:position).each do |q| 
+			q.update_attribute(:position, position)
+			position = position + 1
+		end
 		flash[:title] = "Success"
 		flash[:notice] = "Question updated"
 		rescue Exceptions::QuestionOrderError => error

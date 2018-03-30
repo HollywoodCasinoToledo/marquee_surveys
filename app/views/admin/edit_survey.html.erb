@@ -1,17 +1,17 @@
-<% content_for :title, "New Answer" %>
+<% content_for :title, "Manage Survey" %>
 
 <!-- START BREADCRUMB -->
 <ul class="breadcrumb">
 	<li><a href="/">Home</a></li>  
 	<li>Control Panel</li> 
-	<li>Modify Survey</li>          
+	<li>Manage Survey</li>          
 </ul>
 <!-- END BREADCRUMB --> 
 
 <div class="content-frame">
   <div class="content-frame-top">                        
     <div class="page-title">                    
-      <h2><span class="fa fa-cog"></span> Control Panel - Modify Survey</h2>
+      <h2><span class="fa fa-cog"></span> Control Panel - Manage Survey</h2>
     </div>                                      
     <div class="pull-right">
       <button class="btn btn-default content-frame-left-toggle"><span class="fa fa-bars"></span></button>
@@ -29,6 +29,7 @@
   <div class="content-frame-body">
   	<div class="row">
 			<div class="col-md-6">
+				<%= link_to 'New Category', {controller: :categories, action: :new}, class: 'btn btn-primary' %>
 		    <%= link_to 'New Question', {controller: :questions, action: :new}, class: 'btn btn-primary' %>
 		    <%= link_to 'Archive', {controller: :admin, action: :archive}, class: 'btn btn-primary' %>
 			</div>
