@@ -5,14 +5,14 @@
 	<li><a href="/">Home</a></li>  
 	<li>Control Panel</li> 
 	<li>Answers</li>
-	<li>New</li>           
+	<li>Edit</li>           
 </ul>
 <!-- END BREADCRUMB --> 
 
 <div class="content-frame">
   <div class="content-frame-top">                        
     <div class="page-title">                    
-      <h2><span class="fa fa-cog"></span> Control Panel - New Answer</h2>
+      <h2><span class="fa fa-cog"></span> Control Panel - Edit Answer</h2>
     </div>                                      
     <div class="pull-right">
       <button class="btn btn-default content-frame-left-toggle"><span class="fa fa-bars"></span></button>
@@ -30,7 +30,7 @@
   <div class="content-frame-body">
               
 		<h2><span class="fa fa-plus"></span> Add Answer</h2>
-		<%= form_for :answer, :url => {:controller => :answers, action: :create} do |f| %>
+		<%= form_for :answer, :url => {:controller => :answers, action: :update}, method: :patch do |f| %>
     <div class="panel panel-default max-x-1000">
     	<div class="panel-heading">
         <h3 class="panel-title">Question: <%= @question.title %></h3>
@@ -49,8 +49,8 @@
 	        <% end %>
         </div>
 
-        <%= f.submit 'Add Answer', class: 'btn btn-primary' %>
-				<%= link_to 'Cancel', {controller: :admin, action: :edit_survey}, class: 'btn btn-primary' %>
+        <%= f.submit 'Update Answer', class: 'btn btn-primary' %>
+				<%= link_to 'Cancel', {controller: :admin, action: :control_panel}, class: 'btn btn-primary' %>
       </div>
     </div>
     <% end -%>

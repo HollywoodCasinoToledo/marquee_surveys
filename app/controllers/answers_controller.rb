@@ -16,10 +16,27 @@ class AnswersController < ApplicationController
 		end
 	end
 
+	def delete
+
+	end
+
+	def edit
+		include_navigation_pane_variables
+		@answer = Answer.find(params[:id])
+		@question = Question.find(@answer.question_id)
+	end
+
 	def new
 		include_navigation_pane_variables
-		
 		@question = Question.find(params[:question])
+	end
+
+	def update
+		answer = Answer.find(params[:id])
+		answer.update_attributes(answer_params)
+		flash[:title] = "Success"
+		flash[:notice] = "Answer changed"
+		redirect_to controller: :admin, action: :edit_survey
 	end
 	
 	private
