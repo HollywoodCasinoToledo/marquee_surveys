@@ -30,22 +30,15 @@ class QuestionsController < ApplicationController
 	def move
 		@ordered_array = Array.new
 		@question = Question.find(params[:id])
-		@questions = Question.all.map(&:category_id).map! { |x| x.nil? ? 0 : x }.chunk{|n| n}.map(&:first)
-		uncategorized_questions = Question.where(active: true, category_id: nil).map(&:title)
-		@questions.each do |x| 
-			if x == 0
-				@ordered_array.push(uncategorized_questions.shift)
+		@possible_moves = Array.new
+		@navigation_data.each do |e|
+			if e.is_a?(Hash)
+				@possible_moves.push(e.to_a[0][1][0]) if e.to_a[0][1][0] != @question.id
 			else
-				@ordered_array.push({Category.find(x).name => Question.where(category_id: x).map(&:title)})
+				@possible_moves.push(e) if e != @question.id
 			end
 		end
-		@possible_moves = Array.new
-		if @question.category_id.nil?
-			@possible_moves = Question.where.not(id: @question.id).group('IFNULL(category_id, id)').order(:position).to_a.map.with_index { |q, i| [q.position.to_s + ". " + q.title, q.id] }
-		else
-			@possible_moves = Question.where.not(id: @question.id).order(:position).where(category_id: @question.category_id).to_a.map.with_index { |q, i| [q.position.to_s + ". " + q.title, q.id] }
-		end
-		@possible_moves.push(['Move to end', 'move_to_end']) if @question.category_id.nil?
+		@possible_moves_list = Question.where(id: @possible_moves).to_a.map.with_index { |q, i| [q.position.to_s + ". " + q.title, q.id] }
 	end
 
 	def new

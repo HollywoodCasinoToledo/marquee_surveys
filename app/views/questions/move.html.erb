@@ -25,7 +25,7 @@
 		<%= render 'layouts/left_survey_contents' %>
   </div>
   <!-- END CONTENT FRAME LEFT -->
-  
+
   <!-- START CONTENT FRAME BODY -->
   <div class="content-frame-body">
               
@@ -33,7 +33,7 @@
 
 		<div class="col-md-6">
 
-			<% if @possible_moves.blank? %>
+			<% if @possible_moves_list.blank? %>
 				<div class="alert-compact alert-warning-light" role="alert">
 		        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
 		        <strong>Oh no!</strong> Question cannot move. Movements may be restricted based on category or parent/child relations
@@ -46,38 +46,15 @@
 
         <div class="form-group">
           <p><label for="next">Before question:</label>
-          <%= f.select :next_id, options_for_select(@possible_moves.to_a),{},{class: 'form-control y-500'} %></p>
+          <%= f.select :next_id, options_for_select(@possible_moves_list.to_a),{},{class: 'form-control y-500'} %></p>
         </div>
 
         <%= f.submit 'Move', class: 'btn btn-primary' %>
-        
-				<%= link_to 'Back', {controller: :questions, action: :edit, id: @question.id}, class: 'btn btn-primary' %>
-
+        <%= link_to 'Back', {controller: :questions, action: :edit, id: @question.id}, class: 'btn btn-primary' %>
 			<% end -%>
+			<br/>
+	    <%= button_to 'Move To End', {controller: :questions, action: :update, id: @question.id, question: {operation: 'move_to_end'}}, method: :patch, class: 'btn btn-primary' %>
   		</div>
-
-  		<div class="panel panel-gray panel-body">
-  			<div class="dd" id="nestable">
-  				<ol class="dd-list">
-  					<% @ordered_array.each do |o| %>
-  						<% if o.is_a?(Hash) %>
-	  						<li class="dd-item" data-id="1">
-		  						<div class="dd-handle category"><%= o.first[0] %></div>
-		  					</li>
-		  					<ol class="dd-list" style="">
-		  						<% o[o.first[0]].each do |q| %>
-		  							<li class="dd-item" data-id="3"><div class="dd-handle"><%= q %></div></li>
-		  						<% end %>
-		  					</ol>
-		  				<% else %>
-		  					<li class="dd-item" data-id="1">
-		  						<div class="dd-handle"><%= o %></div>
-		  					</li>
-		  				<% end %>
-	  				<% end %>
-  				</ol>
-      	</div>
-	  	</div>
 		</div>
 	</div>
 </div>
